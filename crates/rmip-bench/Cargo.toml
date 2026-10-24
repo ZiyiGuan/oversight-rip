@@ -1,0 +1,13 @@
+[package]
+name = "rmip-bench"
+description = "Benchmarks comparing the reference implementations against rmip-opt"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-holo = { path = "../rmip-holo" }
+rmip-demo = { path = "../rmip-demo" }
+serde_json = "1"
+sha2 = "0.10"

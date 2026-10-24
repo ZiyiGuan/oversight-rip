@@ -1,0 +1,15 @@
+[package]
+name = "rmip-backend-interleaved"
+description = "A flat interleaved Reed-Solomon commitment, Ligero-style. NOT Ligerito"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-iop = { path = "../rmip-iop" }
+rmip-opt = { path = "../rmip-opt" }
+
+[dev-dependencies]
+rmip-backend-conformance = { path = "../rmip-backend-conformance" }

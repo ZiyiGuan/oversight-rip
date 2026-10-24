@@ -1,0 +1,45 @@
+{
+  "judge_model_hash": "4f8eb534290fdbc905f20f3afbf19663289df8e369f04785da5a71a92a2c9a41",
+  "checkpoint_hash": "c3b2b2bce5cc572f782118798d89d0fddca6cef0c0e37029e82b4b87b4d330d9",
+  "split": "MNIST test, all 10,000 images",
+  "view": "one uniformly random set of k=6 nonzero pixels per image per seed (sparse_views)",
+  "reading": "top-1 over all ten classes",
+  "device": "cpu, torch.use_deterministic_algorithms(True)",
+  "torch_version": "2.8.0",
+  "runs": [
+    {
+      "view_seed": 20260917,
+      "correct": 5878,
+      "images": 10000,
+      "top1_accuracy": 0.5878
+    },
+    {
+      "view_seed": 20260918,
+      "correct": 5923,
+      "images": 10000,
+      "top1_accuracy": 0.5923
+    },
+    {
+      "view_seed": 20260919,
+      "correct": 5955,
+      "images": 10000,
+      "top1_accuracy": 0.5955
+    },
+    {
+      "view_seed": 20260920,
+      "correct": 6021,
+      "images": 10000,
+      "top1_accuracy": 0.6021
+    },
+    {
+      "view_seed": 20260921,
+      "correct": 5919,
+      "images": 10000,
+      "top1_accuracy": 0.5919
+    }
+  ],
+  "mean_top1_accuracy": 0.59392,
+  "min_top1_accuracy": 0.5878,
+  "max_top1_accuracy": 0.6021,
+  "reference": "Irving, Christiano and Amodei (arXiv 1805.00899) report 59.4% for 6 random pixels"
+}

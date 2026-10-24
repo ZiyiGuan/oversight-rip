@@ -1,0 +1,24 @@
+{"event": "complete", "manifest": "benchmarks/mnist-test/artifacts/R4194304/manifest.json", "summary": {"images": 50, "certified_flips": {"min": 508519, "max": 2097145}, "strong_correct": 49}, "shards": 50, "elapsed_seconds": 504479.38}
+	Command being timed: "python3 tools/mnist/survey_sparse.py --views 4194304 --image-ids 0,1,2,4,5,10,13,14,17,19,21,23,25,26,27,29,30,31,32,34,35,36,37,39,40,41,46,47,49,50,56,57,60,67,69,70,71,74,76,79,81,82,85,86,88,89,90,91,94,96 --threads 1 --merge /home/ubuntu/shards-R4194304/00000/ /home/ubuntu/shards-R4194304/00001/ /home/ubuntu/shards-R4194304/00002/ /home/ubuntu/shards-R4194304/00004/ /home/ubuntu/shards-R4194304/00005/ /home/ubuntu/shards-R4194304/00010/ /home/ubuntu/shards-R4194304/00013/ /home/ubuntu/shards-R4194304/00014/ /home/ubuntu/shards-R4194304/00017/ /home/ubuntu/shards-R4194304/00019/ /home/ubuntu/shards-R4194304/00021/ /home/ubuntu/shards-R4194304/00023/ /home/ubuntu/shards-R4194304/00025/ /home/ubuntu/shards-R4194304/00026/ /home/ubuntu/shards-R4194304/00027/ /home/ubuntu/shards-R4194304/00029/ /home/ubuntu/shards-R4194304/00030/ /home/ubuntu/shards-R4194304/00031/ /home/ubuntu/shards-R4194304/00032/ /home/ubuntu/shards-R4194304/00034/ /home/ubuntu/shards-R4194304/00035/ /home/ubuntu/shards-R4194304/00036/ /home/ubuntu/shards-R4194304/00037/ /home/ubuntu/shards-R4194304/00039/ /home/ubuntu/shards-R4194304/00040/ /home/ubuntu/shards-R4194304/00041/ /home/ubuntu/shards-R4194304/00046/ /home/ubuntu/shards-R4194304/00047/ /home/ubuntu/shards-R4194304/00049/ /home/ubuntu/shards-R4194304/00050/ /home/ubuntu/shards-R4194304/00056/ /home/ubuntu/shards-R4194304/00057/ /home/ubuntu/shards-R4194304/00060/ /home/ubuntu/shards-R4194304/00067/ /home/ubuntu/shards-R4194304/00069/ /home/ubuntu/shards-R4194304/00070/ /home/ubuntu/shards-R4194304/00071/ /home/ubuntu/shards-R4194304/00074/ /home/ubuntu/shards-R4194304/00076/ /home/ubuntu/shards-R4194304/00079/ /home/ubuntu/shards-R4194304/00081/ /home/ubuntu/shards-R4194304/00082/ /home/ubuntu/shards-R4194304/00085/ /home/ubuntu/shards-R4194304/00086/ /home/ubuntu/shards-R4194304/00088/ /home/ubuntu/shards-R4194304/00089/ /home/ubuntu/shards-R4194304/00090/ /home/ubuntu/shards-R4194304/00091/ /home/ubuntu/shards-R4194304/00094/ /home/ubuntu/shards-R4194304/00096/ --output benchmarks/mnist-test/artifacts/R4194304"
+	User time (seconds): 804.68
+	System time (seconds): 42.37
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 14:07.42
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 59607184
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 14823372
+	Voluntary context switches: 1976
+	Involuntary context switches: 4238
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 45453096
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

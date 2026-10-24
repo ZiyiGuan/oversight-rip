@@ -1,0 +1,16 @@
+[package]
+name = "rmip-mip"
+description = "Two-prover oracularization and sequential amplification"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-iop = { path = "../rmip-iop" }
+
+[dev-dependencies]
+rmip-backend-trace = { path = "../rmip-backend-trace" }
+rmip-backend-recursive = { path = "../rmip-backend-recursive" }
+rmip-frontend = { path = "../rmip-frontend" }

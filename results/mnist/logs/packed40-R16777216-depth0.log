@@ -1,0 +1,73 @@
+MNIST circuit: image 0 (1/49, after skipping 0)
+MNIST circuit: image 1 (2/49, after skipping 0)
+MNIST circuit: image 2 (3/49, after skipping 0)
+MNIST circuit: image 4 (4/49, after skipping 0)
+MNIST circuit: image 5 (5/49, after skipping 0)
+MNIST circuit: image 10 (6/49, after skipping 0)
+MNIST circuit: image 13 (7/49, after skipping 0)
+MNIST circuit: image 14 (8/49, after skipping 0)
+MNIST circuit: image 17 (9/49, after skipping 0)
+MNIST circuit: image 19 (10/49, after skipping 0)
+MNIST circuit: image 21 (11/49, after skipping 0)
+MNIST circuit: image 23 (12/49, after skipping 0)
+MNIST circuit: image 25 (13/49, after skipping 0)
+MNIST circuit: image 26 (14/49, after skipping 0)
+MNIST circuit: image 27 (15/49, after skipping 0)
+MNIST circuit: image 29 (16/49, after skipping 0)
+MNIST circuit: image 30 (17/49, after skipping 0)
+MNIST circuit: image 31 (18/49, after skipping 0)
+MNIST circuit: image 32 (19/49, after skipping 0)
+MNIST circuit: image 34 (20/49, after skipping 0)
+MNIST circuit: image 35 (21/49, after skipping 0)
+MNIST circuit: image 36 (22/49, after skipping 0)
+MNIST circuit: image 37 (23/49, after skipping 0)
+MNIST circuit: image 39 (24/49, after skipping 0)
+MNIST circuit: image 41 (25/49, after skipping 0)
+MNIST circuit: image 46 (26/49, after skipping 0)
+MNIST circuit: image 47 (27/49, after skipping 0)
+MNIST circuit: image 49 (28/49, after skipping 0)
+MNIST circuit: image 50 (29/49, after skipping 0)
+MNIST circuit: image 56 (30/49, after skipping 0)
+MNIST circuit: image 57 (31/49, after skipping 0)
+MNIST circuit: image 60 (32/49, after skipping 0)
+MNIST circuit: image 67 (33/49, after skipping 0)
+MNIST circuit: image 69 (34/49, after skipping 0)
+MNIST circuit: image 70 (35/49, after skipping 0)
+MNIST circuit: image 71 (36/49, after skipping 0)
+MNIST circuit: image 74 (37/49, after skipping 0)
+MNIST circuit: image 76 (38/49, after skipping 0)
+MNIST circuit: image 79 (39/49, after skipping 0)
+MNIST circuit: image 81 (40/49, after skipping 0)
+MNIST circuit: image 82 (41/49, after skipping 0)
+MNIST circuit: image 85 (42/49, after skipping 0)
+MNIST circuit: image 86 (43/49, after skipping 0)
+MNIST circuit: image 88 (44/49, after skipping 0)
+MNIST circuit: image 89 (45/49, after skipping 0)
+MNIST circuit: image 90 (46/49, after skipping 0)
+MNIST circuit: image 91 (47/49, after skipping 0)
+MNIST circuit: image 94 (48/49, after skipping 0)
+MNIST circuit: image 96 (49/49, after skipping 0)
+{"accepted_images":49,"actual_total_Q_O":4303,"completed_images":49,"ledger":"ledger.json","output_dir":"/home/ubuntu/results/packed40-R16777216-depth0","status":"completed","total_base_executions":49}
+	Command being timed: "taskset -c 4 target/release/mnist_survey --selection benchmarks/mnist-test/artifacts/R16777216/selected.json --expected-selection-sha256 432b9ea38c18bb5ef043c405e5c3cf8f40e35dda01cada46c864122945c0baca --mode protocol --backend ladder --body packed64 --soundness single-shot-40 --depth 0 --images 49 --output-dir /home/ubuntu/results/packed40-R16777216-depth0"
+	User time (seconds): 2041.69
+	System time (seconds): 37.69
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 34:39.67
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 101161536
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8026696
+	Voluntary context switches: 63
+	Involuntary context switches: 9674
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 25344
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

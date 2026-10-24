@@ -1,0 +1,26 @@
+[package]
+name = "rmip-demo"
+description = "Adversarial fixtures, measurement harness, and the parameter registry"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-frontend = { path = "../rmip-frontend" }
+rmip-iop = { path = "../rmip-iop" }
+rmip-mip = { path = "../rmip-mip" }
+rmip-backend-trace = { path = "../rmip-backend-trace" }
+rmip-backend-interleaved = { path = "../rmip-backend-interleaved" }
+rmip-backend-ladder = { path = "../rmip-backend-ladder" }
+rmip-backend-recursive = { path = "../rmip-backend-recursive" }
+rmip-holo = { path = "../rmip-holo" }
+sha2 = "0.10"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rmip-mip-prover = { path = "../rmip-mip-prover" }
+rmip-packed = { path = "../rmip-packed" }
+
+[dev-dependencies]
+rmip-opt = { path = "../rmip-opt" }

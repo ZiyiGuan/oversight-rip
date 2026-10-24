@@ -1,0 +1,22 @@
+[package]
+name = "rmip-flock"
+description = "The bridge that runs Flock's PIOP (zerocheck, lincheck, ring switching) over this repository's public-coin transcript"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-iop = { path = "../rmip-iop" }
+flock-core = { workspace = true, features = ["field64"] }
+flock-field = { workspace = true, features = ["field64"] }
+flock-prover = { workspace = true, features = ["field64"] }
+flock-hash.workspace = true
+
+[dev-dependencies]
+bincode = "1.3"
+serde = "1"
+rand_core = "0.9"
+blake3 = "1"
+rayon = "1"

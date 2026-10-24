@@ -1,0 +1,12 @@
+[package]
+name = "rmip-frontend"
+description = "Oracle circuit -> de-oracled ordinary circuit -> Boolean R1CS + trace layout + loc map"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+
+[dev-dependencies]
+sha2 = "0.10"

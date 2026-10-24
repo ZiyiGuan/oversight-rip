@@ -1,0 +1,39 @@
+    Finished `bench` profile [optimized + debuginfo] target(s) in 0.03s
+     Running benches/blake3_proof.rs (target/release/deps/blake3_proof-24bacad29f9d0a14)
+(target: aarch64 + aes)
+BLAKE3 compression-function R1CS proof timings (prove_fast).
+
+===   256 compressions  (m = 22, slots = 256, witness = 0 MB) ===
+  merkle hash: blake3   fs hash: blake3
+  zerocheck: ag
+  [run 1/3] prove_fast:    85.81 ms
+  [run 2/3] prove_fast:    96.89 ms
+  [run 3/3] prove_fast:    89.88 ms
+  best prove_fast:    85.81 ms  (2983 compressions/sec)
+  peak memory:   524.30 MB
+  verify:    43.00 ms
+  proof size: 280524 bytes (273.95 KiB)
+  (per-phase breakdown: rerun with PCS_TRACE=1)
+	Command being timed: "taskset -c 4 cargo bench --locked --bench blake3_proof"
+	User time (seconds): 2.41
+	System time (seconds): 0.18
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.60
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 644640
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 125725
+	Voluntary context switches: 244
+	Involuntary context switches: 363
+	Swaps: 0
+	File system inputs: 136
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

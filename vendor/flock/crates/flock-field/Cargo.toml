@@ -1,0 +1,19 @@
+[package]
+name = "flock-field"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Binary extension fields used by Flock protocols."
+
+[features]
+mul-count = []
+# RMIP: the interactive 64-bit base field / 128-bit quadratic extension.
+# The default SNARG arithmetic and its representation are unchanged.
+field64 = []
+
+[dependencies]
+serde = { workspace = true }
+
+[lints]
+workspace = true

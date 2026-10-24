@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+# Flock is vendored (vendor/flock/PROVENANCE.md) as its own workspace.
+exclude = ["vendor/flock"]
+members = ["crates/rmip-frontend", "crates/rmip-field", "crates/rmip-iop", "crates/rmip-backend-trace", "crates/rmip-backend-conformance", "crates/rmip-mip", "crates/rmip-mip-prover", "crates/rmip-holo", "crates/rmip-demo", "crates/rmip-backend-interleaved", "crates/rmip-backend-recursive", "crates/rmip-opt", "crates/rmip-bench", "crates/rmip-backend-ladder", "crates/rmip-flock", "crates/rmip-packed"]
+
+# Binius64 at the commit `crates/rmip-field/src/ghash/PROVENANCE.md` already
+# pins for the field: the algebra layer's job is to BE these crates rather than to reimplement
+# them. `binius-ip`'s channel trait is protocol-agnostic -- Fiat-Shamir is one
+# implementation of it, not part of the interface -- which is what makes them
+# usable under `def:iopcs`, and their `Ghash128b` is bit-identical to our
+# `F128` (same GHASH modulus, same bit convention), so the bridge converts
+# through `u128` and does no arithmetic.
+[workspace.dependencies]
+binius-ip = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777" }
+binius-math = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777" }
+binius-field = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777" }
+binius-ip-prover = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777" }
+binius-compute = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777" }
+# Flock (Succinct Labs, Bünz, Wang; MIT OR Apache-2.0) at the commit
+# `crates/rmip-flock` was bridged against. Its zerocheck, lincheck and ring
+# switching are the IOP body; its Ligerito commitment, Merkle trees and
+# Fiat-Shamir are what the two-prover model replaces. `Challenger` is the seam.
+flock-core = { path = "vendor/flock/crates/flock-core" }
+flock-field = { path = "vendor/flock/crates/flock-field" }
+flock-prover = { path = "vendor/flock/crates/flock-prover" }
+flock-hash = { path = "vendor/flock/crates/flock-hash" }
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+
+# Thin LTO, as Flock's own bench profile builds (its `[profile.bench]`:
+# `lto = "thin"` "keeps cross-crate inlining across flock-core / flock-prover").
+# Without it Flock's prover in our process ran 1.35x slower than its bench
+# binary at every size, and our own crates lose the same inlining
+[profile.release]
+lto = "thin"

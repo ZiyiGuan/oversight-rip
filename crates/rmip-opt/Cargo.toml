@@ -1,0 +1,10 @@
+[package]
+name = "rmip-opt"
+description = "Optimised kernels, differentially tested against the reference implementations"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }

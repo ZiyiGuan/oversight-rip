@@ -1,0 +1,61 @@
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running tests/reset.rs (target/release/deps/reset-6fb2f285943097b8)
+
+running 1 test
+test reset_cost ... reset_cost_v2 field=64 fold_field=128 witness_bits=2^32 native_target=40 repetitions=1 warmup=1 measured=3 setup_excluded=true witness_included=true trusted_reset=true rewinding_single_prover=true pins=0
+reset_phase_boundary run=0 role=prover begin
+reset_phase_boundary run=0 role=prover end
+reset_phase_boundary run=1 role=prover begin
+reset_phase_boundary run=1 role=prover end
+reset_snapshot run=1 oracle=0 encoded_words=96468992 domain_log=21 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=96468992
+reset_snapshot run=1 oracle=1 encoded_words=16777216 domain_log=20 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=16777216
+reset_snapshot run=1 oracle=2 encoded_words=8388608 domain_log=19 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=1 oracle=3 encoded_words=4194304 domain_log=18 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset_snapshot run=1 oracle=4 encoded_words=2097152 domain_log=17 log_inv_rate=9 lanes=16 prefix_layer=9 table_words=0
+reset_snapshot run=1 oracle=5 encoded_words=1048576 domain_log=16 log_inv_rate=11 lanes=16 prefix_layer=11 table_words=0
+reset run=1 main_ms=2593.831 prove_ms=2593.603 finish_ms=0.228 snapshot_ms=389.555 checker_ms=70.950 answer_ms=68.126 cleanup_ms=2.824 verifier_ms=33.333 q=185 oracles=6 proof_bytes=57741 reply_bytes=48440 coefficient_bytes=405049344 table_bytes=905969664 native_error_bits=42.921107
+reset_phase_boundary run=2 role=prover begin
+reset_phase_boundary run=2 role=prover end
+reset_snapshot run=2 oracle=0 encoded_words=96468992 domain_log=21 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=96468992
+reset_snapshot run=2 oracle=1 encoded_words=16777216 domain_log=20 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=16777216
+reset_snapshot run=2 oracle=2 encoded_words=8388608 domain_log=19 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=2 oracle=3 encoded_words=4194304 domain_log=18 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset_snapshot run=2 oracle=4 encoded_words=2097152 domain_log=17 log_inv_rate=9 lanes=16 prefix_layer=9 table_words=0
+reset_snapshot run=2 oracle=5 encoded_words=1048576 domain_log=16 log_inv_rate=11 lanes=16 prefix_layer=11 table_words=0
+reset run=2 main_ms=2578.071 prove_ms=2577.859 finish_ms=0.212 snapshot_ms=387.945 checker_ms=72.105 answer_ms=69.553 cleanup_ms=2.552 verifier_ms=33.605 q=185 oracles=6 proof_bytes=57741 reply_bytes=48440 coefficient_bytes=405049344 table_bytes=905969664 native_error_bits=42.921107
+reset_phase_boundary run=3 role=prover begin
+reset_phase_boundary run=3 role=prover end
+reset_snapshot run=3 oracle=0 encoded_words=96468992 domain_log=21 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=96468992
+reset_snapshot run=3 oracle=1 encoded_words=16777216 domain_log=20 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=16777216
+reset_snapshot run=3 oracle=2 encoded_words=8388608 domain_log=19 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=3 oracle=3 encoded_words=4194304 domain_log=18 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset_snapshot run=3 oracle=4 encoded_words=2097152 domain_log=17 log_inv_rate=9 lanes=16 prefix_layer=9 table_words=0
+reset_snapshot run=3 oracle=5 encoded_words=1048576 domain_log=16 log_inv_rate=11 lanes=16 prefix_layer=11 table_words=0
+reset run=3 main_ms=2584.628 prove_ms=2584.476 finish_ms=0.152 snapshot_ms=389.015 checker_ms=72.473 answer_ms=69.758 cleanup_ms=2.715 verifier_ms=33.551 q=185 oracles=6 proof_bytes=57741 reply_bytes=48440 coefficient_bytes=405049344 table_bytes=905969664 native_error_bits=42.921107
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 16.61s
+
+	Command being timed: "taskset -c 4 cargo test --release --locked -p rmip-flock --features field64 --test reset reset_cost -- --ignored --exact --nocapture --test-threads=1"
+	User time (seconds): 16.05
+	System time (seconds): 0.67
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:16.73
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 8763468
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 172579
+	Voluntary context switches: 204
+	Involuntary context switches: 599
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

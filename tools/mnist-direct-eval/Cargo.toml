@@ -1,0 +1,13 @@
+[package]
+name = "mnist-direct-eval"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+rmip-demo = { path = "../../crates/rmip-demo" }
+rmip-frontend = { path = "../../crates/rmip-frontend" }
+rmip-iop = { path = "../../crates/rmip-iop" }
+serde_json = "1"

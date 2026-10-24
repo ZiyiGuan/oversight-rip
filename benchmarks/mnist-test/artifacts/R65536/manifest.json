@@ -1,0 +1,119 @@
+{
+  "artifacts": {
+    "config.json": {
+      "bytes": 1613,
+      "sha256": "1988a470d8f6494bcf18392923721583c1c38ba6f41dc3a1a539b645b5ef0f84"
+    },
+    "selected.csv": {
+      "bytes": 18433,
+      "sha256": "ff3ff658650a0f8bdc617c8a7206ae43678e01086b7af5f2a14310734710a357"
+    },
+    "selected.json": {
+      "bytes": 364099679,
+      "sha256": "77e04da14fda06e2820c6d5657f446c80412682471be85e012f92b09e48a9892"
+    }
+  },
+  "circuit": "sparse_mnist_majority_v1",
+  "config": {
+    "criterion": {
+      "image_ids": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        10,
+        13,
+        14,
+        17,
+        19,
+        21,
+        23,
+        25,
+        26,
+        27,
+        29,
+        30,
+        31,
+        32,
+        34,
+        35,
+        36,
+        37,
+        39,
+        40,
+        41,
+        46,
+        47,
+        49,
+        50,
+        56,
+        57,
+        60,
+        67,
+        69,
+        70,
+        71,
+        74,
+        76,
+        79,
+        81,
+        82,
+        85,
+        86,
+        88,
+        89,
+        90,
+        91,
+        94,
+        96
+      ],
+      "minimum_certified_flips": 1,
+      "ordering": "ascending_test_image_id",
+      "require_correct": true,
+      "selection": "fixed_image_ids",
+      "strong_radius": 8192
+    },
+    "r": 65536,
+    "schema": "mnist_sparse_selected_config_v1",
+    "sources": {
+      "checkpoint_sha256": "c3b2b2bce5cc572f782118798d89d0fddca6cef0c0e37029e82b4b87b4d330d9",
+      "judge_model_hash": "4f8eb534290fdbc905f20f3afbf19663289df8e369f04785da5a71a92a2c9a41",
+      "test_images_sha256": "0fa7898d509279e482958e8ce81c8e77db3f2f8254e26661ceb7762c4d494ce7",
+      "test_labels_sha256": "ff7bcfd416de33731a308c3f266cc351222c34898ecbeaf847f06e48f7ec33f2",
+      "tool_source_sha256": {
+        "common.py": "60268769d8ef43b54dde8c03d12a0f28dce03ce7479c3cd4fd3f582203387ae4",
+        "prepare_sparse.py": "5870c48b17e39fe2d037db7bea6ba0a4650b1820fe0380f5fd1bf59fa4e7d7a1",
+        "survey_sparse.py": "0233721fbee535b98986d0c282eb58bc418be7ff8f1a3fc2f037184444b23b4c",
+        "train_sparse_judge.py": "cf9409dede3b26f4f273b5a6a957f6201eb9615c8a4666cbf1aec705583e7881"
+      }
+    },
+    "threads": 4,
+    "threshold": 32769
+  },
+  "elapsed_seconds": 1376.0370861249999,
+  "environment": {
+    "deterministic_algorithms": true,
+    "device": "cpu",
+    "numpy": "2.0.2",
+    "python": "3.9.6",
+    "threads": 4,
+    "torch": "2.8.0"
+  },
+  "provenance": {
+    "images_url": "https://ossci-datasets.s3.amazonaws.com/mnist/t10k-images-idx3-ubyte.gz",
+    "labels_url": "https://ossci-datasets.s3.amazonaws.com/mnist/t10k-labels-idx1-ubyte.gz",
+    "live_table_differential": "all registered masks of every image evaluated twice on CPU",
+    "robustness_domain": "arbitrary Boolean oracle-answer flips, simultaneously over all ten legal candidate labels; invalid labels always reject",
+    "selection": "fixed benchmark identifiers, originally the first 50 correct strong-majority test images at R=256 in test order"
+  },
+  "schema": "mnist_sparse_selected_v1",
+  "summary": {
+    "certified_flips": {
+      "max": 32767,
+      "min": 7900
+    },
+    "images": 50,
+    "strong_correct": 49
+  }
+}

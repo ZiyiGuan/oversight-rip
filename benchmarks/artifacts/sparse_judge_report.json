@@ -1,0 +1,9 @@
+{
+  "judge_model_hash": "4f8eb534290fdbc905f20f3afbf19663289df8e369f04785da5a71a92a2c9a41",
+  "checkpoint_hash": "c3b2b2bce5cc572f782118798d89d0fddca6cef0c0e37029e82b4b87b4d330d9",
+  "seed": 20260827,
+  "steps": 30000,
+  "batch": 128,
+  "lr": 0.0001,
+  "k": 6
+}

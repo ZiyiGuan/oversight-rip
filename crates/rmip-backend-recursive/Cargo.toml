@@ -1,0 +1,16 @@
+[package]
+name = "rmip-backend-recursive"
+description = "A two-level fold ladder over interleaved Reed-Solomon. Exists to exercise coin-dependent oracles, not to compete on q_long"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-iop = { path = "../rmip-iop" }
+rmip-backend-interleaved = { path = "../rmip-backend-interleaved" }
+rmip-opt = { path = "../rmip-opt" }
+
+[dev-dependencies]
+rmip-backend-conformance = { path = "../rmip-backend-conformance" }

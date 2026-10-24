@@ -1,0 +1,309 @@
+//! Compile-time-selected leaf kernels for the F128 additive NTT.
+//!
+//! Transform scheduling and cache-blocking policy stay in the parent module;
+//! this module owns the architecture-specific operations on blocks of data.
+
+use crate::field::F128;
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+use crate::ntt::additive_ntt_f128::kernels::aarch64::{butterfly_block, butterfly_block_pair};
+#[cfg(not(all(feature = "field64", target_arch = "aarch64", target_feature = "aes")))]
+use crate::ntt::additive_ntt_f128::kernels::portable::butterfly_fused_3layer as butterfly_fused_3layer_portable;
+#[cfg(not(all(
+    not(feature = "field64"),
+    target_arch = "x86_64",
+    target_feature = "avx512f",
+    target_feature = "vpclmulqdq"
+)))]
+use crate::ntt::additive_ntt_f128::kernels::portable::butterfly_fused_4layer_row as butterfly_fused_4layer_row_portable;
+#[cfg(not(any(
+    all(feature = "field64", target_arch = "aarch64", target_feature = "aes"),
+    all(
+        not(feature = "field64"),
+        target_arch = "x86_64",
+        target_feature = "avx512f",
+        target_feature = "vpclmulqdq"
+    )
+)))]
+use crate::ntt::additive_ntt_f128::kernels::portable::{
+    butterfly_fused_2layer as butterfly_fused_2layer_portable,
+    butterfly_row_pair as butterfly_row_pair_portable,
+};
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "x86_64",
+    target_feature = "avx512f",
+    target_feature = "vpclmulqdq"
+))]
+use crate::ntt::additive_ntt_f128::kernels::x86_64::{
+    butterfly_fused_2layer as butterfly_fused_2layer_x86_64,
+    butterfly_fused_4layer_row as butterfly_fused_4layer_row_x86_64,
+    butterfly_row_pair as butterfly_row_pair_x86_64,
+};
+mod portable;
+
+#[cfg(all(feature = "field64", target_arch = "aarch64", target_feature = "aes"))]
+mod aarch64_field64;
+
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+mod aarch64;
+
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "x86_64",
+    target_feature = "avx512f",
+    target_feature = "vpclmulqdq"
+))]
+mod x86_64;
+
+#[inline]
+pub(super) fn butterfly_row_pair(top: &mut [F128], bot: &mut [F128], twiddle: F128) {
+    debug_assert_eq!(top.len(), bot.len());
+
+    #[cfg(all(feature = "field64", target_arch = "aarch64", target_feature = "aes"))]
+    // SAFETY: cfg provides PMULL and callers provide equal row lengths.
+    unsafe {
+        aarch64_field64::butterfly_row_pair(top, bot, twiddle);
+    }
+
+    #[cfg(all(
+        not(feature = "field64"),
+        target_arch = "x86_64",
+        target_feature = "avx512f",
+        target_feature = "vpclmulqdq"
+    ))]
+    // SAFETY: the cfg gate guarantees the required target features.
+    unsafe {
+        butterfly_row_pair_x86_64(top, bot, twiddle);
+    }
+
+    #[cfg(not(any(
+        all(feature = "field64", target_arch = "aarch64", target_feature = "aes"),
+        all(
+            not(feature = "field64"),
+            target_arch = "x86_64",
+            target_feature = "avx512f",
+            target_feature = "vpclmulqdq"
+        )
+    )))]
+    butterfly_row_pair_portable(top, bot, twiddle);
+}
+
+#[allow(clippy::too_many_arguments)]
+#[inline]
+pub(super) fn butterfly_fused_2layer(
+    a: &mut [F128],
+    b: &mut [F128],
+    c: &mut [F128],
+    d: &mut [F128],
+    t_outer: F128,
+    t_inner_a: F128,
+    t_inner_b: F128,
+) {
+    debug_assert_eq!(a.len(), b.len());
+    debug_assert_eq!(a.len(), c.len());
+    debug_assert_eq!(a.len(), d.len());
+
+    #[cfg(all(feature = "field64", target_arch = "aarch64", target_feature = "aes"))]
+    // SAFETY: cfg provides PMULL; the row slices have matching lengths.
+    unsafe {
+        aarch64_field64::butterfly_fused_2layer(a, b, c, d, t_outer, t_inner_a, t_inner_b);
+    }
+
+    #[cfg(all(
+        not(feature = "field64"),
+        target_arch = "x86_64",
+        target_feature = "avx512f",
+        target_feature = "vpclmulqdq"
+    ))]
+    // SAFETY: the cfg gate guarantees the required target features.
+    unsafe {
+        butterfly_fused_2layer_x86_64(a, b, c, d, t_outer, t_inner_a, t_inner_b);
+    }
+
+    #[cfg(not(any(
+        all(feature = "field64", target_arch = "aarch64", target_feature = "aes"),
+        all(
+            not(feature = "field64"),
+            target_arch = "x86_64",
+            target_feature = "avx512f",
+            target_feature = "vpclmulqdq"
+        )
+    )))]
+    butterfly_fused_2layer_portable(a, b, c, d, t_outer, t_inner_a, t_inner_b);
+}
+
+/// Fused three-layer (8-point) butterfly over one row group. GF(2^64) has
+/// two-lane NEON operations; other fields retain the portable implementation.
+#[inline]
+pub(super) fn butterfly_fused_3layer(
+    rows: [&mut [F128]; 8],
+    t0: F128,
+    t1: &[F128; 2],
+    t2: &[F128; 4],
+) {
+    #[cfg(all(feature = "field64", target_arch = "aarch64", target_feature = "aes"))]
+    // SAFETY: cfg provides PMULL; callers provide matching row lengths.
+    unsafe {
+        aarch64_field64::butterfly_fused_3layer(rows, t0, t1, t2);
+    }
+    #[cfg(not(all(feature = "field64", target_arch = "aarch64", target_feature = "aes")))]
+    butterfly_fused_3layer_portable(rows, t0, t1, t2);
+}
+
+#[cfg(all(feature = "field64", target_arch = "aarch64", target_feature = "aes"))]
+#[inline]
+pub(super) fn butterfly_fused_2layer_zero(
+    a: &mut [F128],
+    b: &mut [F128],
+    c: &mut [F128],
+    d: &mut [F128],
+    t_inner_b: F128,
+) {
+    // SAFETY: cfg provides PMULL and the parent supplies matching row slices.
+    unsafe {
+        aarch64_field64::butterfly_fused_2layer_zero(a, b, c, d, t_inner_b);
+    }
+}
+
+/// Process one fused-four-layer row group across every interleaved NTT lane.
+///
+/// # Safety
+/// The caller must ensure the 16 row slices selected by `r` are valid and
+/// disjoint from any row group being processed concurrently.
+#[inline]
+pub(super) unsafe fn butterfly_fused_4layer_row(
+    ptr: *mut F128,
+    sixteenth: usize,
+    num_ntts: usize,
+    r: usize,
+    twiddles: &[F128; 15],
+) {
+    #[cfg(all(
+        not(feature = "field64"),
+        target_arch = "x86_64",
+        target_feature = "avx512f",
+        target_feature = "vpclmulqdq"
+    ))]
+    // SAFETY: target features are guaranteed by cfg; the caller owns the row
+    // geometry and disjointness contract.
+    unsafe {
+        butterfly_fused_4layer_row_x86_64(ptr, sixteenth, num_ntts, r, twiddles);
+    }
+
+    #[cfg(not(all(
+        not(feature = "field64"),
+        target_arch = "x86_64",
+        target_feature = "avx512f",
+        target_feature = "vpclmulqdq"
+    )))]
+    // SAFETY: forwarded caller contract.
+    unsafe {
+        butterfly_fused_4layer_row_portable(ptr, sixteenth, num_ntts, r, twiddles);
+    }
+}
+
+/// In-place radix-8 (fused-3-layer) rows of one block; `zero_root` selects
+/// the block-0 XOR-only spine. NEON-only entry (the ranked top pass).
+///
+/// # Safety
+/// Row geometry valid; concurrent calls own disjoint row ranges.
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+#[allow(clippy::too_many_arguments)]
+#[inline]
+pub(super) unsafe fn butterfly_fused_3layer_rows(
+    ptr: *mut F128,
+    eighth: usize,
+    num_ntts: usize,
+    row_start: usize,
+    row_end: usize,
+    twiddles: &[F128; 7],
+    zero_root: bool,
+) {
+    // SAFETY: cfg gate guarantees PMULL; caller contract forwarded.
+    unsafe {
+        aarch64::butterfly_fused_3layer_rows(
+            ptr, eighth, num_ntts, row_start, row_end, twiddles, zero_root,
+        )
+    }
+}
+
+/// Rate-1/2 dual-destination from-source radix-8 row (see the aarch64
+/// module comment: staged L1 tiles + non-temporal row bursts). NEON-only.
+///
+/// # Safety
+/// Geometry valid for all three pointers; disjoint row groups; `num_ntts`
+/// even and ≤ 64; `t_zero[0]==t_zero[1]==t_zero[3]==0`.
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+#[allow(clippy::too_many_arguments)]
+#[inline]
+pub(super) unsafe fn butterfly_fused_3layer_dual_from_src_row(
+    src: *const F128,
+    dst0: *mut F128,
+    dst1: *mut F128,
+    eighth: usize,
+    num_ntts: usize,
+    r: usize,
+    t_zero: &[F128; 7],
+    t_gen: &[F128; 7],
+) {
+    // SAFETY: cfg gate guarantees PMULL; caller contract forwarded.
+    unsafe {
+        aarch64::butterfly_fused_3layer_dual_from_src_row(
+            src, dst0, dst1, eighth, num_ntts, r, t_zero, t_gen,
+        )
+    }
+}
+
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+#[inline]
+pub(super) unsafe fn butterfly_neon_block(chunk: &mut [F128], twiddle: F128, half: usize) {
+    // SAFETY: the cfg gate guarantees PMULL through the aes feature.
+    unsafe { butterfly_block(chunk, twiddle, half) }
+}
+
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+#[inline]
+pub(super) unsafe fn butterfly_neon_block_pair(
+    data: &mut [F128],
+    base: usize,
+    t_a: F128,
+    t_b: F128,
+) {
+    // SAFETY: the cfg gate guarantees PMULL through the aes feature.
+    unsafe { butterfly_block_pair(&mut data[base..base + 4], t_a, t_b) }
+}
+
+#[cfg(all(
+    not(feature = "field64"),
+    target_arch = "aarch64",
+    target_feature = "aes"
+))]
+#[inline]
+pub(super) unsafe fn butterfly_neon_block_pair_chunk(chunk: &mut [F128], t_a: F128, t_b: F128) {
+    // SAFETY: the cfg gate guarantees PMULL through the aes feature.
+    unsafe { butterfly_block_pair(chunk, t_a, t_b) }
+}

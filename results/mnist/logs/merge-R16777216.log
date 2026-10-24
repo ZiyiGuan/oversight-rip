@@ -1,0 +1,24 @@
+{"event": "complete", "manifest": "benchmarks/mnist-test/artifacts/R16777216/manifest.json", "summary": {"images": 49, "certified_flips": {"min": 2037092, "max": 8388580}, "strong_correct": 48}, "shards": 49, "elapsed_seconds": 2313036.317}
+	Command being timed: "python3 tools/mnist/survey_sparse.py --views 16777216 --image-ids 0,1,2,4,5,10,13,14,17,19,21,23,25,26,27,29,30,31,32,34,35,36,37,39,41,46,47,49,50,56,57,60,67,69,70,71,74,76,79,81,82,85,86,88,89,90,91,94,96 --threads 1 --merge /home/ubuntu/shards-R16777216/00000/ /home/ubuntu/shards-R16777216/00001/ /home/ubuntu/shards-R16777216/00002/ /home/ubuntu/shards-R16777216/00004/ /home/ubuntu/shards-R16777216/00005/ /home/ubuntu/shards-R16777216/00010/ /home/ubuntu/shards-R16777216/00013/ /home/ubuntu/shards-R16777216/00014/ /home/ubuntu/shards-R16777216/00017/ /home/ubuntu/shards-R16777216/00019/ /home/ubuntu/shards-R16777216/00021/ /home/ubuntu/shards-R16777216/00023/ /home/ubuntu/shards-R16777216/00025/ /home/ubuntu/shards-R16777216/00026/ /home/ubuntu/shards-R16777216/00027/ /home/ubuntu/shards-R16777216/00029/ /home/ubuntu/shards-R16777216/00030/ /home/ubuntu/shards-R16777216/00031/ /home/ubuntu/shards-R16777216/00032/ /home/ubuntu/shards-R16777216/00034/ /home/ubuntu/shards-R16777216/00035/ /home/ubuntu/shards-R16777216/00036/ /home/ubuntu/shards-R16777216/00037/ /home/ubuntu/shards-R16777216/00039/ /home/ubuntu/shards-R16777216/00041/ /home/ubuntu/shards-R16777216/00046/ /home/ubuntu/shards-R16777216/00047/ /home/ubuntu/shards-R16777216/00049/ /home/ubuntu/shards-R16777216/00050/ /home/ubuntu/shards-R16777216/00056/ /home/ubuntu/shards-R16777216/00057/ /home/ubuntu/shards-R16777216/00060/ /home/ubuntu/shards-R16777216/00067/ /home/ubuntu/shards-R16777216/00069/ /home/ubuntu/shards-R16777216/00070/ /home/ubuntu/shards-R16777216/00071/ /home/ubuntu/shards-R16777216/00074/ /home/ubuntu/shards-R16777216/00076/ /home/ubuntu/shards-R16777216/00079/ /home/ubuntu/shards-R16777216/00081/ /home/ubuntu/shards-R16777216/00082/ /home/ubuntu/shards-R16777216/00085/ /home/ubuntu/shards-R16777216/00086/ /home/ubuntu/shards-R16777216/00088/ /home/ubuntu/shards-R16777216/00089/ /home/ubuntu/shards-R16777216/00090/ /home/ubuntu/shards-R16777216/00091/ /home/ubuntu/shards-R16777216/00094/ /home/ubuntu/shards-R16777216/00096/ --output benchmarks/mnist-test/artifacts/R16777216"
+	User time (seconds): 3113.86
+	System time (seconds): 177.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 54:51.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 233718880
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 57004463
+	Voluntary context switches: 469
+	Involuntary context switches: 16317
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 178170952
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

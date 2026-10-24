@@ -1,0 +1,11 @@
+[package]
+name = "rmip-backend-conformance"
+description = "Backend-agnostic conformance suite for the commitment backends"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-iop = { path = "../rmip-iop" }

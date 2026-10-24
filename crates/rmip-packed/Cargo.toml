@@ -1,0 +1,18 @@
+[package]
+name = "rmip-packed"
+description = "The packed PIOP: bits packed κ per field element, generic over the binary field"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-frontend = { path = "../rmip-frontend" }
+rmip-iop = { path = "../rmip-iop" }
+rmip-opt = { path = "../rmip-opt" }
+
+[dev-dependencies]
+rmip-backend-interleaved = { path = "../rmip-backend-interleaved" }
+rmip-backend-ladder = { path = "../rmip-backend-ladder" }
+rmip-demo = { path = "../rmip-demo" }

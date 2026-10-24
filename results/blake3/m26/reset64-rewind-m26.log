@@ -1,0 +1,55 @@
+    Finished `release` profile [optimized] target(s) in 0.05s
+     Running tests/reset.rs (target/release/deps/reset-6fb2f285943097b8)
+
+running 1 test
+test reset_cost ... reset_cost_v2 field=64 fold_field=128 witness_bits=2^26 native_target=40 repetitions=1 warmup=1 measured=3 setup_excluded=true witness_included=true trusted_reset=true rewinding_single_prover=true pins=0
+reset_phase_boundary run=0 role=prover begin
+reset_phase_boundary run=0 role=prover end
+reset_phase_boundary run=1 role=prover begin
+reset_phase_boundary run=1 role=prover end
+reset_snapshot run=1 oracle=0 encoded_words=1507328 domain_log=15 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=1507328
+reset_snapshot run=1 oracle=1 encoded_words=262144 domain_log=14 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=262144
+reset_snapshot run=1 oracle=2 encoded_words=131072 domain_log=13 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=1 oracle=3 encoded_words=65536 domain_log=12 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset run=1 main_ms=87.748 prove_ms=87.598 finish_ms=0.151 snapshot_ms=6.720 checker_ms=1.309 answer_ms=1.302 cleanup_ms=0.007 verifier_ms=34.413 q=160 oracles=4 proof_bytes=53013 reply_bytes=44800 coefficient_bytes=6328320 table_bytes=14155776 native_error_bits=42.363771
+reset_phase_boundary run=2 role=prover begin
+reset_phase_boundary run=2 role=prover end
+reset_snapshot run=2 oracle=0 encoded_words=1507328 domain_log=15 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=1507328
+reset_snapshot run=2 oracle=1 encoded_words=262144 domain_log=14 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=262144
+reset_snapshot run=2 oracle=2 encoded_words=131072 domain_log=13 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=2 oracle=3 encoded_words=65536 domain_log=12 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset run=2 main_ms=84.748 prove_ms=84.514 finish_ms=0.233 snapshot_ms=5.833 checker_ms=2.163 answer_ms=2.153 cleanup_ms=0.010 verifier_ms=39.067 q=160 oracles=4 proof_bytes=53013 reply_bytes=44800 coefficient_bytes=6328320 table_bytes=14155776 native_error_bits=42.363771
+reset_phase_boundary run=3 role=prover begin
+reset_phase_boundary run=3 role=prover end
+reset_snapshot run=3 oracle=0 encoded_words=1507328 domain_log=15 log_inv_rate=1 lanes=46 prefix_layer=7 table_words=1507328
+reset_snapshot run=3 oracle=1 encoded_words=262144 domain_log=14 log_inv_rate=3 lanes=16 prefix_layer=6 table_words=262144
+reset_snapshot run=3 oracle=2 encoded_words=131072 domain_log=13 log_inv_rate=5 lanes=16 prefix_layer=5 table_words=0
+reset_snapshot run=3 oracle=3 encoded_words=65536 domain_log=12 log_inv_rate=7 lanes=16 prefix_layer=7 table_words=0
+reset run=3 main_ms=85.294 prove_ms=85.128 finish_ms=0.166 snapshot_ms=5.704 checker_ms=1.318 answer_ms=1.311 cleanup_ms=0.007 verifier_ms=33.197 q=160 oracles=4 proof_bytes=53013 reply_bytes=44800 coefficient_bytes=6328320 table_bytes=14155776 native_error_bits=42.363771
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 5.69s
+
+	Command being timed: "taskset -c 4 cargo test --release --locked -p rmip-flock --features field64 --test reset reset_cost -- --ignored --exact --nocapture --test-threads=1"
+	User time (seconds): 5.58
+	System time (seconds): 0.21
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.80
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 773144
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 141818
+	Voluntary context switches: 204
+	Involuntary context switches: 536
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

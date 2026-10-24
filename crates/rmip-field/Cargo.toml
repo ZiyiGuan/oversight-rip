@@ -1,0 +1,9 @@
+[package]
+name = "rmip-field"
+description = "Self-contained binary extension fields GF(2^128) and GF(2^64)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]

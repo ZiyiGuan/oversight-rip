@@ -1,0 +1,3 @@
+b684b1258e4b1f202bec24afd660ace851b09e5e
+git status --porcelain: only untracked entries, none modified: Cargo's .cargo-ok marker and macOS AppleDouble ._* metadata files added by tar on the laptop
+rustc 1.98.0 (88d9e12ae 2026-08-18)

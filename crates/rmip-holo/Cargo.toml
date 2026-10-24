@@ -1,0 +1,17 @@
+[package]
+name = "rmip-holo"
+description = "Holographic T_mat: sparse matrix evaluation with a preprocessed index, verifier sublinear in Z"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+rmip-field = { path = "../rmip-field" }
+rmip-frontend = { path = "../rmip-frontend" }
+rmip-iop = { path = "../rmip-iop" }
+rmip-backend-interleaved = { path = "../rmip-backend-interleaved" }
+rmip-opt = { path = "../rmip-opt" }
+
+[dev-dependencies]
+rmip-demo = { path = "../rmip-demo" }
