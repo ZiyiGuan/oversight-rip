@@ -333,6 +333,13 @@ pub enum AuditMode {
     #[default]
     OneOf,
     Sequential,
+    Rewind,
+}
+
+impl AuditMode {
+    pub fn refuses_padding(self) -> bool {
+        matches!(self, Self::Sequential | Self::Rewind)
+    }
 }
 
 pub fn relation_error(mu: usize, nu: usize) -> f64 {

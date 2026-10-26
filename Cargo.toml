@@ -20,7 +20,7 @@ binius-compute = { git = "https://github.com/binius-zk/binius64", rev = "0a3a777
 # Flock (Succinct Labs, Bünz, Wang; MIT OR Apache-2.0) at the commit
 # `crates/rmip-flock` was bridged against. Its zerocheck, lincheck and ring
 # switching are the IOP body; its Ligerito commitment, Merkle trees and
-# Fiat-Shamir are what the two-prover model replaces. `Challenger` is the seam.
+# Fiat-Shamir are what rewinding replaces. `Challenger` is the seam.
 flock-core = { path = "vendor/flock/crates/flock-core" }
 flock-field = { path = "vendor/flock/crates/flock-field" }
 flock-prover = { path = "vendor/flock/crates/flock-prover" }

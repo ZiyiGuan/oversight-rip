@@ -1,0 +1,4 @@
+Model name:                              Neoverse-V2
+64
+Mem:             989           6         984           0           3         983
+[always] madvise never

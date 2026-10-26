@@ -1,7 +1,7 @@
 use rmip_demo::harness::mnist_case;
 use rmip_demo::measured_execution::{
-    parameters_body, parameters_for, parameters_opts, run_protocol_opts, IopBody, MipBackend,
-    RunOptions, Soundness, AMPLIFIED_TARGET,
+    parameters_body, parameters_for, parameters_opts, run_protocol_opts, Compilation, IopBody,
+    MipBackend, RunOptions, Soundness, AMPLIFIED_TARGET,
 };
 use rmip_frontend::report::local_sampling_repetitions;
 
@@ -42,6 +42,7 @@ fn single_shot_meets_the_target_in_one_execution_on_the_ladder() {
             soundness: Soundness::SingleShot,
             body: IopBody::Flat,
             ladder_depth: None,
+            compilation: Compilation::TwoProver,
         },
         MipBackend::Ladder,
     )
@@ -85,6 +86,7 @@ fn single_shot_at_1024_views_serializes_128_byte_coordinates() {
             soundness: Soundness::SingleShot,
             body: IopBody::Flat,
             ladder_depth: None,
+            compilation: Compilation::TwoProver,
         },
         MipBackend::Ladder,
     )
@@ -129,6 +131,7 @@ fn single_shot_on_the_ladder_also_takes_one_execution() {
             soundness: Soundness::SingleShot,
             body: IopBody::Flat,
             ladder_depth: None,
+            compilation: Compilation::TwoProver,
         },
         MipBackend::Ladder,
     )
@@ -161,7 +164,7 @@ fn a_forty_bit_single_shot_meets_forty_bits() {
             p["amplified_error_budget"].as_f64().unwrap(),
             2f64.powi(-40)
         );
-        assert!(p["s_two_prover_one"].as_f64().unwrap() <= 2f64.powi(-40));
+        assert!(p["s_one_execution"].as_f64().unwrap() <= 2f64.powi(-40));
         assert!(p["opening_columns"].as_u64().unwrap() >= 64);
     }
 }
@@ -193,6 +196,7 @@ fn single_shot_runs_the_packed_body_on_the_ladder() {
                     soundness: Soundness::SingleShot,
                     body,
                     ladder_depth: None,
+                    compilation: Compilation::TwoProver,
                 },
                 backend,
             )
@@ -238,6 +242,7 @@ fn single_shot_on_the_depth_zero_ladder_takes_one_execution() {
             soundness: Soundness::SingleShot,
             body: IopBody::Flat,
             ladder_depth: Some(0),
+            compilation: Compilation::TwoProver,
         },
         MipBackend::Ladder,
     )
@@ -261,6 +266,7 @@ fn the_flat_backend_opens_each_body_at_its_field() {
                 soundness: Soundness::Amplified,
                 body,
                 ladder_depth: None,
+                compilation: Compilation::TwoProver,
             },
             MipBackend::Flat,
         )

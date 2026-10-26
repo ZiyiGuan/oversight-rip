@@ -1,4 +1,4 @@
-# Rust sources of this repository, the input of rmip-demo's source fingerprint.
+# The Rust sources under crates/, the input of rmip-demo's source fingerprint; tools/mnist-direct-eval's sources are outside it.
 crates/rmip-backend-conformance/src/lib.rs
 crates/rmip-backend-conformance/tests/mutation.rs
 crates/rmip-backend-interleaved/src/backend.rs

@@ -20,9 +20,11 @@ fn honest() -> (Tree, Vec<rmip_packed::tree::LevelWitness<F64>>) {
 fn measured_shape(tree: &Tree) -> rmip_backend_ladder::LadderShape {
     let (_, total_log) = tree.layout(6);
     let shape = SingleShotTarget { bits: 40 }
-        .ladder_shape(total_log, Some(0), 64)
+        .rewinding_shape(total_log, 64)
         .expect("the measured shape");
     assert_eq!(shape.depth(), 0, "the measured ladder has depth 0");
+    assert_eq!(shape.pins, 0, "the rewinding compilation pins nothing");
+    assert_eq!(shape.queries(), 64, "the measured opening reads 64 columns");
     shape
 }
 

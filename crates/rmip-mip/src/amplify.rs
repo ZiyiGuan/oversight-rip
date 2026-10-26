@@ -5,7 +5,7 @@ use rmip_iop::backend::{
 pub fn audit_denominator(audit: AuditMode, q_long: usize) -> usize {
     match audit {
         AuditMode::OneOf => q_long,
-        AuditMode::Sequential => 1,
+        AuditMode::Sequential | AuditMode::Rewind => 1,
     }
 }
 

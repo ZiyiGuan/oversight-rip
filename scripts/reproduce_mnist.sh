@@ -36,7 +36,7 @@ for R in $SIZES; do
   N=$(field "$A/R$R/manifest.json" "['summary']['images']")
   echo "== $R views, $N images: protocol, then direct evaluation"
   $PIN target/release/mnist_survey --mode protocol --backend ladder --body packed64 --soundness single-shot-40 \
-    --depth 0 --images "$N" --selection "$B" --expected-selection-sha256 "$SHA" --output-dir "$OUT/R$R" \
+    --depth 0 --compilation rewind --images "$N" --selection "$B" --expected-selection-sha256 "$SHA" --output-dir "$OUT/R$R" \
     > "$OUT/survey-R$R.log" 2>&1 || { echo "mnist_survey failed at R=$R, see $OUT/survey-R$R.log" >&2; exit 1; }
   $PIN tools/mnist-direct-eval/target/release/mnist-direct-eval --images "$N" --probes 9 --selection "$B" \
     --expected-selection-sha256 "$SHA" --output "$OUT/direct-eval-R$R.json" \

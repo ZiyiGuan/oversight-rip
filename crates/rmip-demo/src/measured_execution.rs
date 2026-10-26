@@ -207,6 +207,29 @@ impl Soundness {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+pub enum Compilation {
+    #[default]
+    TwoProver,
+    Rewind,
+}
+
+impl Compilation {
+    pub fn parse(s: &str) -> Option<Self> {
+        match s {
+            "two-prover" | "two_prover" | "mip" => Some(Self::TwoProver),
+            "rewind" | "rewinding" | "rip" => Some(Self::Rewind),
+            _ => None,
+        }
+    }
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::TwoProver => "two-prover",
+            Self::Rewind => "rewind",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum IopBody {
     #[default]
     Flat,
@@ -298,8 +321,35 @@ fn ladder_shape(
     soundness: Soundness,
     body: IopBody,
     depth: Option<usize>,
+    compilation: Compilation,
 ) -> rmip_backend_ladder::LadderShape {
     let nu = body_trace_log(case, body);
+    if compilation == Compilation::Rewind {
+        assert_eq!(
+            depth,
+            Some(0),
+            "the rewinding compilation runs the one-table ladder: pass depth 0"
+        );
+        return match soundness.single_shot_target() {
+            Some(t) => t
+                .rewinding_shape(nu, opening_kappa(body))
+                .unwrap_or_else(|| {
+                    panic!(
+                        "the single-shot target 2^-{} is not reachable at this shape: the table's field term exceeds it",
+                        t.bits
+                    )
+                }),
+            None => {
+                let mut shape = rmip_backend_ladder::LadderShape::for_trace_at_depth(
+                    nu,
+                    soundness.lambda_bits(),
+                    0,
+                );
+                shape.pins = 0;
+                shape
+            }
+        };
+    }
     match soundness.single_shot_target() {
         Some(t) => t
             .ladder_shape(nu, depth, opening_kappa(body))
@@ -347,9 +397,24 @@ pub fn parameters_body_at_depth(
     body: IopBody,
     depth: Option<usize>,
 ) -> Value {
+    parameters_compiled(case, which, soundness, body, depth, Compilation::TwoProver)
+}
+
+pub fn parameters_compiled(
+    case: &Case,
+    which: MipBackend,
+    soundness: Soundness,
+    body: IopBody,
+    depth: Option<usize>,
+    compilation: Compilation,
+) -> Value {
     assert!(
         !(which == MipBackend::Flat && soundness.is_single_shot()),
         "the flat backend's one-of audit cannot reach 2^-20 in one execution; single-shot needs the ladder"
+    );
+    assert!(
+        !(which == MipBackend::Flat && compilation == Compilation::Rewind),
+        "the rewinding compilation is implemented on the ladder at depth 0"
     );
     let cfg = config_for(case, soundness);
     let shape = flat_shape(case, soundness, body);
@@ -375,7 +440,7 @@ pub fn parameters_body_at_depth(
             MipBackend::Ladder => {
                 rmip_backend_ladder::require_unpadded(&cfg);
                 let kappa = opening_kappa(body);
-                let ls = ladder_shape(case, soundness, body, depth);
+                let ls = ladder_shape(case, soundness, body, depth, compilation);
                 let params = match body {
                     IopBody::Packed64 => {
                         rmip_backend_ladder::Ladder64::lazy(ls).public_params(trace_len, claims)
@@ -426,10 +491,22 @@ pub fn parameters_body_at_depth(
     } else {
         "matrix_scan"
     };
-    let proof_status = match ladder.get("depth").and_then(Value::as_u64) {
-        None => "the flat opening: the one-of audit of the committed trace",
-        Some(0) | Some(1) => "proved: the ladder at depth 0 and 1 under the sequential audit",
-        Some(_) => "CONDITIONAL: the ladder's opening lemma at depth >= 2 is an open obligation; every error figure here assumes it",
+    let proof_status = match (compilation, ladder.get("depth").and_then(Value::as_u64)) {
+        (Compilation::Rewind, _) => "proved: the IOP's own error, by the paper's IOP-to-RIP lemma; the opening is the one-table interleaved test, pin-free",
+        (Compilation::TwoProver, None) => "the flat opening: the one-of audit of the committed trace",
+        (Compilation::TwoProver, Some(0) | Some(1)) => "proved: the ladder at depth 0 and 1 under the sequential audit",
+        (Compilation::TwoProver, Some(_)) => "CONDITIONAL: the ladder's opening lemma at depth >= 2 is an open obligation; every error figure here assumes it",
+    };
+    assert_eq!(
+        params.audit == AuditMode::Rewind,
+        compilation == Compilation::Rewind,
+        "backend audit {:?} under the {} compilation",
+        params.audit,
+        compilation.name()
+    );
+    let randomness = match compilation {
+        Compilation::TwoProver => "OsChallenger; separate verifier-private audit challenger",
+        Compilation::Rewind => "OsChallenger; no audit challenger, there being no second prover",
     };
     json!({
         "backend": params.name,
@@ -437,6 +514,7 @@ pub fn parameters_body_at_depth(
             IopBody::Flat => "rmip_mip_prover::execute_recording",
             _ => "rmip_mip_prover::execute_recording_packed",
         },
+        "compilation": compilation.name(),
         "body": body.name(), "trace_len": trace_len, "trace_log": body_trace_log(case, body),
         "eps_col": eps_col_value, "eps_col_all_levels": eps_col_total, "eps_open_flat": eps_open_flat,
         "rate_inverse": 4, "lambda_bits": lambda_report,
@@ -444,16 +522,16 @@ pub fn parameters_body_at_depth(
         "ladder": ladder,
         "proof_status": proof_status,
         "embedding": embedding,
-        "audit": match params.audit { AuditMode::OneOf => "one_of", AuditMode::Sequential => "sequential" },
+        "audit": match params.audit { AuditMode::OneOf => "one_of", AuditMode::Sequential => "sequential", AuditMode::Rewind => "rewind" },
         "local_error_budget": soundness.local_budget(), "amplified_error_budget": sigma,
         "eps_bind": params.eps_bind, "eps_relation": eps_rel,
         "eps_open": params.eps_open, "eps_index": eps_idx, "local_miss_bound": beta,
-        "s_iop": s_iop, "s_two_prover_one": rmip_mip::one_shot_bound(s_iop, denominator),
+        "s_iop": s_iop, "s_one_execution": rmip_mip::one_shot_bound(s_iop, denominator),
         "base_t": cfg.t, "q_long": q_long, "claim_count": claims,
         "amplification_repetitions": repetitions,
         "amplified_bound": rmip_mip::repeated_bound(s_iop, denominator, repetitions),
         "configured_total_Q_O": repetitions.checked_mul(cfg.t).expect("Q_O overflow"),
-        "randomness": "OsChallenger; separate verifier-private audit challenger",
+        "randomness": randomness,
         "ideal_coin_caveat": "a ChaCha20 stream keyed from the OS CSPRNG is a computational implementation; theorem assumes ideal independent coins"
     })
 }
@@ -475,19 +553,31 @@ pub fn measure_communication(
     )
 }
 
-const COMMUNICATION_CONVENTION_V1: &str = "actual messages serialized with rmip-wire-v1 framing in both directions; includes all public coin draws, posting notices, main questions/answers and the one checker question/answer; private audit index and coins stay private; in-process protocol bytes exclude OS/network transport headers";
+const COMMUNICATION_CONVENTION_V1: &str = "actual messages serialized with rmip-wire-v1 framing in both directions; includes all public coin draws, posting notices, main questions/answers and the checker questions/answers the audit asked (one under the one-of audit, every occurrence under the sequential one); private audit index and coins stay private; in-process protocol bytes exclude OS/network transport headers";
+const COMMUNICATION_CONVENTION_REWIND_V1: &str = "actual messages serialized with rmip-wire-v1 framing in both directions; includes all public coin draws, posting notices and the prover's answers to the verifier's queries; no checker exchange, there being no second prover; in-process protocol bytes exclude OS/network transport headers";
 
-fn communication_convention(communication: crate::wire::CommunicationBytes) -> String {
+fn communication_convention(
+    communication: crate::wire::CommunicationBytes,
+    compilation: Compilation,
+) -> String {
     let version = communication.widest_version();
     if version == crate::wire::VERSION {
-        return COMMUNICATION_CONVENTION_V1.to_string();
+        return match compilation {
+            Compilation::TwoProver => COMMUNICATION_CONVENTION_V1,
+            Compilation::Rewind => COMMUNICATION_CONVENTION_REWIND_V1,
+        }
+        .to_string();
     }
     let (threshold, width) = match version {
         crate::wire::VERSION_WIDE => ("2^64", "sixteen-byte"),
         crate::wire::VERSION_WIDE256 => ("2^128", "thirty-two-byte"),
         _ => ("2^256", "128-byte"),
     };
-    format!("actual messages serialized with rmip-wire-v1 framing in both directions, except that main and checker questions to an oracle whose posted domain exceeds {threshold} carry a {width} coordinate under rmip-wire-v{version} frames (narrower domains keep the narrower frames); includes all public coin draws, posting notices, main questions/answers and the one checker question/answer; private audit index and coins stay private; in-process protocol bytes exclude OS/network transport headers")
+    let exchange = match compilation {
+        Compilation::TwoProver => "main questions/answers and the checker questions/answers the audit asked (one under the one-of audit, every occurrence under the sequential one); private audit index and coins stay private",
+        Compilation::Rewind => "the prover's answers to the verifier's queries; no checker exchange, there being no second prover",
+    };
+    format!("actual messages serialized with rmip-wire-v1 framing in both directions, except that questions to an oracle whose posted domain exceeds {threshold} carry a {width} coordinate under rmip-wire-v{version} frames (narrower domains keep the narrower frames); includes all public coin draws, posting notices, {exchange}; in-process protocol bytes exclude OS/network transport headers")
 }
 
 pub struct ProtocolRun {
@@ -528,6 +618,7 @@ pub fn run_protocol_with<O: Oracle>(
             soundness: Soundness::Amplified,
             body: IopBody::Flat,
             ladder_depth: None,
+            compilation: Compilation::TwoProver,
         },
         which,
     )
@@ -540,6 +631,7 @@ pub struct RunOptions {
     pub soundness: Soundness,
     pub body: IopBody,
     pub ladder_depth: Option<usize>,
+    pub compilation: Compilation,
 }
 
 pub fn run_protocol_opts<O: Oracle>(
@@ -548,8 +640,14 @@ pub fn run_protocol_opts<O: Oracle>(
     opts: RunOptions,
     which: MipBackend,
 ) -> Result<ProtocolRun, String> {
-    let params =
-        parameters_body_at_depth(case, which, opts.soundness, opts.body, opts.ladder_depth);
+    let params = parameters_compiled(
+        case,
+        which,
+        opts.soundness,
+        opts.body,
+        opts.ladder_depth,
+        opts.compilation,
+    );
     let shape = flat_shape(case, opts.soundness, opts.body);
     match which {
         MipBackend::Flat => match opts.body {
@@ -557,7 +655,13 @@ pub fn run_protocol_opts<O: Oracle>(
             _ => run_generic(case, oracle, opts, params, &|| Ligero::lazy(shape)),
         },
         MipBackend::Ladder => {
-            let ls = ladder_shape(case, opts.soundness, opts.body, opts.ladder_depth);
+            let ls = ladder_shape(
+                case,
+                opts.soundness,
+                opts.body,
+                opts.ladder_depth,
+                opts.compilation,
+            );
             match opts.body {
                 IopBody::Packed64 => run_generic(case, oracle, opts, params, &|| {
                     rmip_backend_ladder::Ladder64::lazy(ls)
@@ -583,6 +687,7 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
         soundness,
         body,
         ladder_depth: _,
+        compilation,
     } = opts;
     let required = params["amplification_repetitions"].as_u64().unwrap() as usize;
     let count = if amplified { required } else { 1 };
@@ -604,27 +709,46 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
         }
     }
     let session = Session::start();
-    let (checker, checker_setup, checker_preparation_calls) = {
-        let _role = metrics::enter(Role::CheckerProver);
-        let checker_start = Instant::now();
-        let mut checker_backend = make();
-        let (advice, calls): (Vec<rmip_field::F128>, usize) = match body {
-            IopBody::Flat => (case.honest_trace.clone(), 0),
-            IopBody::Packed64 => {
-                let (_, _, w) =
-                    packed_witness::<rmip_field::F64, _>(&packed, oracle, &PackedCheat::default());
-                (rmip_field::F64::to_words(&w), case.inst.ell)
-            }
-            IopBody::Packed128 => {
-                let (_, _, w) =
-                    packed_witness::<rmip_field::F128, _>(&packed, oracle, &PackedCheat::default());
-                (w, case.inst.ell)
-            }
-        };
-        checker_backend.commit(&advice, &mut OsChallenger::new());
-        (PCheck::new(checker_backend), checker_start.elapsed(), calls)
+    let (checker, checker_setup, checker_preparation_calls) = match compilation {
+        Compilation::Rewind => (None, std::time::Duration::ZERO, 0usize),
+        Compilation::TwoProver => {
+            let _role = metrics::enter(Role::CheckerProver);
+            let checker_start = Instant::now();
+            let mut checker_backend = make();
+            let (advice, calls): (Vec<rmip_field::F128>, usize) = match body {
+                IopBody::Flat => (case.honest_trace.clone(), 0),
+                IopBody::Packed64 => {
+                    let (_, _, w) = packed_witness::<rmip_field::F64, _>(
+                        &packed,
+                        oracle,
+                        &PackedCheat::default(),
+                    );
+                    (rmip_field::F64::to_words(&w), case.inst.ell)
+                }
+                IopBody::Packed128 => {
+                    let (_, _, w) = packed_witness::<rmip_field::F128, _>(
+                        &packed,
+                        oracle,
+                        &PackedCheat::default(),
+                    );
+                    (w, case.inst.ell)
+                }
+            };
+            checker_backend.commit(&advice, &mut OsChallenger::new());
+            (
+                Some(PCheck::new(checker_backend)),
+                checker_start.elapsed(),
+                calls,
+            )
+        }
     };
-    let audit_mode = checker.backend().params(1).audit;
+    let audit_mode = make().params(1).audit;
+    if (audit_mode == AuditMode::Rewind) != (compilation == Compilation::Rewind) {
+        return Err(format!(
+            "backend audit {audit_mode:?} under the {} compilation: a pin-free backend is sound only when rewound, a pinned one is audited",
+            compilation.name()
+        ));
+    }
     let mut raw = Vec::with_capacity(count);
     let mut verifier_calls = Vec::new();
     let mut main_prover_calls = Vec::new();
@@ -693,17 +817,28 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
         let ta = Instant::now();
         let (audit, checker_answers): (Audit, Vec<rmip_iop::backend::Symbol<rmip_field::F128>>) = {
             let _role = metrics::enter(Role::Verifier);
-            match audit_mode {
-                AuditMode::OneOf => {
+            match (&checker, audit_mode) {
+                (Some(checker), AuditMode::OneOf) => {
                     let mut private_audit_coins = MeasuredChallenger::new(OsChallenger::new());
                     let (a, answer) = rmip_mip::checker::audit_with_answer(
                         &execution,
-                        &checker,
+                        checker,
                         &mut private_audit_coins,
                     );
                     (a, vec![answer])
                 }
-                AuditMode::Sequential => rmip_mip::audit_all_with_answers(&execution, &checker),
+                (Some(checker), AuditMode::Sequential) => {
+                    rmip_mip::audit_all_with_answers(&execution, checker)
+                }
+                (None, AuditMode::Rewind) => (
+                    if execution.iop_accepted() {
+                        Audit::Accepted { audited: 0 }
+                    } else {
+                        Audit::UnderlyingRejected { audited: 0 }
+                    },
+                    Vec::new(),
+                ),
+                _ => unreachable!("the checker exists exactly under the two-prover compilation"),
             }
         };
         let audit_time = ta.elapsed();
@@ -780,6 +915,21 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
                 questions_expected += checker_answers.len();
                 (wire, question_bytes, answer_bytes, json!("all"))
             }
+            AuditMode::Rewind => {
+                let wire = crate::wire::measure_execution_sequential_with_domains(
+                    public_coins.transcript(),
+                    &execution,
+                    &[],
+                    domain_of,
+                )
+                .map_err(|e| format!("communication serialization: {e}"))?;
+                (
+                    wire,
+                    0,
+                    0,
+                    json!("none: one prover, restored to its posting state before each query"),
+                )
+            }
         };
         communication += wire;
         checker_question_bytes += question_bytes;
@@ -829,21 +979,49 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
         }));
         if (repetition + 1) % 100 == 0 {
             eprintln!(
-                "measured: completed {}/{} actual two-prover executions",
+                "measured: completed {}/{} actual executions",
                 repetition + 1,
                 count
             );
         }
     }
-    if checker.questions_asked() != questions_expected {
-        return Err("checker boundary: the checker was asked a different number of questions than the audit accounts for".into());
+    if let Some(checker) = &checker {
+        if checker.questions_asked() != questions_expected {
+            return Err("checker boundary: the checker was asked a different number of questions than the audit accounts for".into());
+        }
     }
     let elapsed = start.elapsed();
     let report = session.finish();
+    let mut parties = json!({
+        "main_prover": party_stats(report.main_prover, report.heap_tracking),
+        "verifier": party_stats(report.verifier, report.heap_tracking),
+        "diagnostic": party_stats(report.diagnostic, report.heap_tracking),
+        "unattributed_runner": party_stats(report.unattributed, report.heap_tracking),
+    });
+    if compilation == Compilation::TwoProver {
+        parties["checker_prover_including_preparation"] =
+            party_stats(report.checker_prover, report.heap_tracking);
+    }
+    let execution_kind = match (compilation, amplified) {
+        (Compilation::TwoProver, true) => "actual_amplified_two_prover",
+        (Compilation::TwoProver, false) => "actual_base_two_prover_smoke",
+        (Compilation::Rewind, true) => "actual_amplified_rewinding",
+        (Compilation::Rewind, false) => "actual_base_rewinding_smoke",
+    };
+    let checker_advice = match (compilation, body) {
+        (Compilation::Rewind, _) => "none: one prover, which answers every query from the table it posted",
+        (Compilation::TwoProver, IopBody::Flat) => "immutable honest trace retained from separately reported case preparation",
+        (Compilation::TwoProver, _) => "the packed words derived from the table in the checker's preparation, as the opening's transcript words",
+    };
+    let measurement_convention = match compilation {
+        Compilation::TwoProver => "disjoint actual operation scopes; diagnostic replay and ledger construction excluded from parties; raw instrumented elapsed time includes timer/allocator overhead; prover aliases mean main prover; checker includes one separately reported preparation; joint_execution_wall_ms covers the repetitions only and excludes that preparation, so the party runtimes sum to the joint wall plus checker_preparation_ms",
+        Compilation::Rewind => "disjoint actual operation scopes; diagnostic replay and ledger construction excluded from parties; raw instrumented elapsed time includes timer/allocator overhead; one prover: its messages and its answers to the verifier's queries, read from the table it posted; restoring its posting state is not charged, as the RIP model says; joint_execution_wall_ms covers the repetitions and contains the party scopes together with the diagnostic and unattributed ones",
+    };
     Ok(ProtocolRun {
         measurements: json!({
             "status": if all_accepted { "accepted" } else { "rejected" },
-            "execution_kind": if amplified { "actual_amplified_two_prover" } else { "actual_base_two_prover_smoke" },
+            "execution_kind": execution_kind,
+            "compilation": compilation.name(),
             "backend": params["backend"].clone(), "audit_mode": params["audit"].clone(),
             "body": body.name(),
             "configured_repetitions": required, "executed_repetitions": count,
@@ -852,21 +1030,12 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
             "joint_execution_wall_ms": elapsed.as_secs_f64()*1000.0,
             "checker_preparation_ms": checker_setup.as_secs_f64()*1000.0,
             "checker_preparation_oracle_calls": checker_preparation_calls,
-            "checker_advice": match body {
-                IopBody::Flat => "immutable honest trace retained from separately reported case preparation",
-                _ => "the packed words derived from the table in the checker's preparation, as the opening's transcript words",
-            },
+            "checker_advice": checker_advice,
             "prover_runtime_ms": report.main_prover.elapsed.as_secs_f64()*1000.0,
             "verifier_runtime_ms": report.verifier.elapsed.as_secs_f64()*1000.0,
             "prover_peak_memory_bytes": report.heap_tracking.then_some(report.main_prover.peak_heap_bytes),
-            "party_measurements": {
-                "main_prover": party_stats(report.main_prover, report.heap_tracking),
-                "verifier": party_stats(report.verifier, report.heap_tracking),
-                "checker_prover_including_preparation": party_stats(report.checker_prover, report.heap_tracking),
-                "diagnostic": party_stats(report.diagnostic, report.heap_tracking),
-                "unattributed_runner": party_stats(report.unattributed, report.heap_tracking),
-            },
-            "measurement_convention": "disjoint actual operation scopes; diagnostic replay and ledger construction excluded from parties; raw instrumented elapsed time includes timer/allocator overhead; prover aliases mean main prover; checker includes one separately reported preparation; joint_execution_wall_ms covers the repetitions only and excludes that preparation, so the party runtimes sum to the joint wall plus checker_preparation_ms",
+            "party_measurements": parties,
+            "measurement_convention": measurement_convention,
             "heap_tracking": report.heap_tracking,
             "memory_convention": "measured requested live Rust heap payload by allocation origin across the full amplification; outgoing buffers retained until freed; excludes stack, RSS, allocator bookkeeping, and public case/shared advice allocated before measurement; per-party peaks are not additive",
             "main_short_message_bytes": total_short_bytes, "main_long_answer_bytes": total_answer_bytes,
@@ -879,8 +1048,8 @@ fn run_generic<O: Oracle, B: LazyBackend<Field = rmip_field::F128>>(
             "accounted_partial_two_way_payload_bytes": total_short_bytes+total_answer_bytes+checker_answer_bytes+checker_question_bytes,
             "communication": communication.to_json(),
             "total_serialized_communication_bytes": communication.total_bytes(),
-            "communication_convention": communication_convention(communication),
-            "checker_questions": checker.questions_asked(), "raw_base_executions": raw,
+            "communication_convention": communication_convention(communication, compilation),
+            "checker_questions": checker.as_ref().map_or(0, |c| c.questions_asked()), "raw_base_executions": raw,
         }),
         verifier_calls,
         main_prover_calls,

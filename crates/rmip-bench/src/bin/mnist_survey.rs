@@ -1,5 +1,6 @@
 use rmip_demo::measured_execution::{
-    parameters_body_at_depth, run_protocol_opts, IopBody, Lookup, MipBackend, RunOptions, Soundness,
+    parameters_compiled, run_protocol_opts, Compilation, IopBody, Lookup, MipBackend, RunOptions,
+    Soundness,
 };
 use rmip_demo::mnist_survey::load_selection;
 use serde_json::{json, Value};
@@ -29,12 +30,12 @@ Usage: cargo run --release -p rmip-bench --bin mnist_survey -- [OPTIONS]
                          summarize_sweep.py merges shard ledgers by image_id.
                          Example: --skip 7 --images 1 runs the eighth image.
   --mode MODE            replay | protocol (default: replay)
-  --backend NAME         ladder | flat (default: ladder): the MIP backend
+  --backend NAME         ladder | flat (default: ladder): the commitment backend
   --body NAME            flat | packed64 | packed128 (default: flat): the relation body
                          measured in protocol mode and parameterised in both
   --protocol-smoke        One actual base execution per image, without amplification
   --record-lookups       Keep every oracle lookup's query and elapsed time in the
-                         ledger (a diagnostic that costs the main prover about
+                         ledger (a diagnostic that costs the prover about
                          50 ns per view inside its timer; default: count only)
   --single-shot          The single-execution parameters (a 2^-21 sampling budget,
                          a 23-bit opening of 34 columns, pins for a 2^-30 collision
@@ -48,14 +49,20 @@ Usage: cargo run --release -p rmip-bench --bin mnist_survey -- [OPTIONS]
                          is complete); required with a
                          single-shot mode, since the full depth can be 2 or more,
                          where the bound is conditional on the open ladder lemma
+  --compilation MODE     two-prover | rewind (default: two-prover): two provers with
+                         the checker audited, or one prover that the verifier
+                         restores to its posting state before each query (the
+                         paper's IOP-to-RIP compilation); rewind runs the ladder at
+                         depth 0 without pins and needs --backend ladder --depth 0
   --output-dir PATH      Default: benchmarks/mnist-test/results/latest
   --help                 Print this help
 
 The loader independently replays every exact certificate from the frozen tables.
 Protocol mode runs full configured amplification for each image unless explicitly
-marked smoke. The MIP runs the bundled backend (bundled-rs: one tuple query,
-q_long = 1, padding refused); the original circuit, sparse-query codec, soundness
-budgets, and separate public/private OS challengers are unchanged. CNN judging and mask
+marked smoke. The ladder at depth 0 reads one bundled tuple of columns (q_long = 1,
+padding refused); under --compilation rewind the one prover is run and timed, under
+two-prover a checker is audited besides. The original circuit, sparse-query codec and
+soundness budgets are unchanged; the coins come from the OS challenger. CNN judging and mask
 preparation are offline; online oracle calls are frozen table lookups.
 ";
 
@@ -70,6 +77,7 @@ struct Args {
     smoke: bool,
     soundness: Soundness,
     ladder_depth: Option<usize>,
+    compilation: Compilation,
     record_lookups: bool,
     output: PathBuf,
 }
@@ -86,6 +94,7 @@ fn arguments() -> Result<Option<Args>, String> {
         smoke: false,
         soundness: Soundness::Amplified,
         ladder_depth: None,
+        compilation: Compilation::TwoProver,
         record_lookups: false,
         output: "benchmarks/mnist-test/results/latest".into(),
     };
@@ -144,6 +153,10 @@ fn arguments() -> Result<Option<Args>, String> {
             "--depth" => {
                 out.ladder_depth = Some(value.parse().map_err(|_| "depth must be an integer")?)
             }
+            "--compilation" => {
+                out.compilation = Compilation::parse(&value)
+                    .ok_or_else(|| "compilation must be two-prover or rewind".to_string())?
+            }
             "--output-dir" => out.output = value.into(),
             _ => return Err(format!("unknown option {key}")),
         }
@@ -156,6 +169,14 @@ fn arguments() -> Result<Option<Args>, String> {
         && out.ladder_depth.is_none()
     {
         return Err("single-shot modes require an explicit --depth D: 0 and 1 are proved, deeper depths are conditional on the open ladder lemma and the ledger says so".into());
+    }
+    if out.compilation == Compilation::Rewind
+        && (out.backend != MipBackend::Ladder || out.ladder_depth != Some(0))
+    {
+        return Err(
+            "--compilation rewind runs the one-table ladder without pins: pass --backend ladder --depth 0"
+                .into(),
+        );
     }
     Ok(Some(out))
 }
@@ -318,6 +339,7 @@ fn run(args: Args) -> Result<(), String> {
     let mut ledger = json!({
         "schema": "mnist-sparse-mip-ledger-v2", "status": "running",
         "backend": args.backend.name(), "soundness": args.soundness.name(), "body": args.body.name(), "skip": skip,
+        "compilation": args.compilation.name(),
         "circuit": "sparse_mnist_majority_v2_regular_popcount", "mode": args.mode,
         "selection_path": args.selection, "selection_sha256": data.manifest_sha256,
         "selection_criterion": criterion, "sources": sources,
@@ -374,12 +396,13 @@ fn run(args: Args) -> Result<(), String> {
                 "trace_N": case.layout.n_trace, "trace_nu": case.layout.nu},
             "status": "certificate_replayed_and_case_built",
         });
-        let protocol_parameters = parameters_body_at_depth(
+        let protocol_parameters = parameters_compiled(
             &case,
             args.backend,
             args.soundness,
             args.body,
             args.ladder_depth,
+            args.compilation,
         );
         row["backend"] = protocol_parameters["backend"].clone();
         row["eps_col"] = protocol_parameters["eps_col"].clone();
@@ -394,6 +417,7 @@ fn run(args: Args) -> Result<(), String> {
                     soundness: args.soundness,
                     body: args.body,
                     ladder_depth: args.ladder_depth,
+                    compilation: args.compilation,
                 },
                 args.backend,
             )?;

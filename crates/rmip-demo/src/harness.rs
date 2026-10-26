@@ -433,6 +433,13 @@ fn audit_for<B: CommitmentBackend<Field = F128>>(
             audit_one(e, checker, &mut audit_ch)
         }
         AuditMode::Sequential => audit_all(e, checker),
+        AuditMode::Rewind => {
+            if e.iop_accepted() {
+                rmip_mip::Audit::Accepted { audited: 0 }
+            } else {
+                rmip_mip::Audit::UnderlyingRejected { audited: 0 }
+            }
+        }
     }
 }
 

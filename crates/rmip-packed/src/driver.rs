@@ -95,8 +95,8 @@ where
         cfg.pad_queries_to
     );
     assert!(
-        !(params.audit == rmip_iop::backend::AuditMode::Sequential && cfg.pad_queries_to.is_some()),
-        "Config::pad_queries_to = {:?} is refused for a sequentially audited backend",
+        !(params.audit.refuses_padding() && cfg.pad_queries_to.is_some()),
+        "Config::pad_queries_to = {:?} is refused for a sequentially audited or rewound backend",
         cfg.pad_queries_to
     );
     mark("asserts");

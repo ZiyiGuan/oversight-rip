@@ -13,9 +13,10 @@ interpreter (`best_us`); both stay in the JSON and the summary lines. Sizes with
 plots, and one line per size with the medians the table is computed from. Every value is a median over the
 size's images.
 
-The protocol has one prover, rewound before its single answering query: it runs the main role, then answers
-from the state it fixed before the query. `mnist_survey` times the two roles separately (`main_prover`,
-`checker_prover_including_preparation`); the prover's time is their sum per image.
+The protocol has one prover, which the verifier restores to its state at the posting before each query (the
+paper's IOP-to-RIP compilation, `mnist_survey --compilation rewind`): the prover's time is its messages and
+its answers, read from the table it posted (`main_prover`); there is no second role and no audit, and the
+script refuses a ledger measured otherwise.
 """
 import argparse
 import json
@@ -23,7 +24,25 @@ import math
 import statistics
 from pathlib import Path
 
-ARTIFACTS = Path(__file__).resolve().parent.parent / "benchmarks" / "mnist-test" / "artifacts"
+# The shipped manifests: beside the scripts in the release (scripts/../benchmarks), two levels up in the
+# development tree (release/scripts/../../benchmarks), or wherever --artifacts says. Every size's manifest ships,
+# and a ledger is refused unless it matches the manifest of its size.
+def artifacts_dir(explicit=None):
+    here = Path(__file__).resolve().parent
+    usable = lambda d: (d / "R256" / "manifest.json").exists()
+    if explicit is not None:
+        # An explicit directory is authoritative: an unusable one is an error, not a fallback.
+        if not usable(explicit):
+            raise SystemExit(f"--artifacts {explicit}: no R256/manifest.json there")
+        return explicit
+    for d in (here.parent / "benchmarks" / "mnist-test" / "artifacts",
+              here.parent.parent / "benchmarks" / "mnist-test" / "artifacts"):
+        if usable(d):
+            return d
+    raise SystemExit("the shipped manifests (benchmarks/mnist-test/artifacts/R<views>/manifest.json) were not found; pass --artifacts DIR")
+
+
+ARTIFACTS = None
 
 SIZES = [256, 1024, 4096, 16384, 65536, 262144, 1048576, 1 << 22, 1 << 24, 1 << 26]
 
@@ -38,11 +57,15 @@ def validate(R, j, d):
     need(j.get("views") == R, f"the ledger is for {j.get('views')} views")
     need(j.get("requested_images") == j.get("completed_images") == j.get("accepted_images") == len(ims) > 0,
          "not every requested image completed and was accepted")
-    need((j.get("mode"), j.get("body"), j.get("soundness")) == ("protocol", "packed-64", "single-shot-40"),
-         f"configuration {j.get('mode')}/{j.get('body')}/{j.get('soundness')}, not protocol/packed-64/single-shot-40")
+    need((j.get("mode"), j.get("body"), j.get("soundness"), j.get("compilation")) == ("protocol", "packed-64", "single-shot-40", "rewind"),
+         f"configuration {j.get('mode')}/{j.get('body')}/{j.get('soundness')}/{j.get('compilation')}, not protocol/packed-64/single-shot-40/rewind")
     for im in ims:
         e, p = im["execution"], im["protocol_parameters"]
         need(im["status"] == e["status"] == "accepted", f"image {im['image_id']} was not accepted")
+        need(p.get("compilation") == e.get("compilation") == "rewind" and p.get("audit") == e.get("audit_mode") == "rewind",
+             f"image {im['image_id']} was not run under the rewinding compilation")
+        need(p.get("pins") == 0 and p.get("eps_col") == 0 and "checker_prover_including_preparation" not in e["party_measurements"],
+             f"image {im['image_id']} has pins or a checker, the two-prover compilation's")
         need(e["configured_repetitions"] == e["executed_repetitions"] == p["amplification_repetitions"] == 1,
              f"image {im['image_id']} ran more than one execution")
         need(p.get("ladder", {}).get("depth") == 0, f"image {im['image_id']} is not at ladder depth 0")
@@ -52,11 +75,11 @@ def validate(R, j, d):
     need(d.get("requested_images") == d.get("completed_images") == len(dims), "the direct evaluation did not complete every image")
     need(d.get("selection_sha256") == j.get("selection_sha256"), "the protocol and the direct evaluation read different bundles")
     need([i["image_id"] for i in dims] == [im["image_id"] for im in ims], "the protocol and the direct evaluation cover different images")
-    manifest = ARTIFACTS / f"R{R}" / "manifest.json"
-    if manifest.exists():
-        m = json.loads(manifest.read_text())
-        need(j["selection_sha256"] == m["artifacts"]["selected.json"]["sha256"], "the bundle differs from the shipped manifest's")
-        need(len(ims) == m["summary"]["images"], f"{len(ims)} images, the manifest has {m['summary']['images']}")
+    manifest = (ARTIFACTS or artifacts_dir()) / f"R{R}" / "manifest.json"
+    need(manifest.exists(), f"no shipped manifest at {manifest}")
+    m = json.loads(manifest.read_text())
+    need(j["selection_sha256"] == m["artifacts"]["selected.json"]["sha256"], "the bundle differs from the shipped manifest's")
+    need(len(ims) == m["summary"]["images"], f"{len(ims)} images, the manifest has {m['summary']['images']}")
 
 
 def row(results, R):
@@ -73,10 +96,10 @@ def row(results, R):
     return dict(
         R=R, images=len(ims),
         queries=med(lambda im: im["execution"]["actual_total_Q_O"]),
-        prover_ms=med(lambda im: ms(im, "main_prover") + ms(im, "checker_prover_including_preparation")),
+        prover_ms=party("main_prover"),
         verifier_ms=party("verifier"),
         robustness=med(lambda im: im["certificate"]["certified_flips"] / R),
-        error_bits=min(-math.log2(im["protocol_parameters"]["s_two_prover_one"]) for im in ims),
+        error_bits=min(-math.log2(im["protocol_parameters"]["s_one_execution"]) for im in ims),
         loop_us=statistics.median(i["tight_in_order_best_us"] for i in d),
     )
 
@@ -118,7 +141,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("results", type=Path)
     ap.add_argument("--json", type=Path)
+    ap.add_argument("--artifacts", type=Path, help="the directory holding R<views>/manifest.json (found beside the scripts or in the development tree otherwise)")
     a = ap.parse_args()
+    global ARTIFACTS
+    ARTIFACTS = artifacts_dir(a.artifacts)
     rows = [r for r in (row(a.results, R) for R in SIZES) if r]
     if not rows:
         raise SystemExit(f"no complete size under {a.results}")

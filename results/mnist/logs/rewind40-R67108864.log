@@ -45,25 +45,25 @@ MNIST circuit: image 90 (44/47, after skipping 0)
 MNIST circuit: image 91 (45/47, after skipping 0)
 MNIST circuit: image 94 (46/47, after skipping 0)
 MNIST circuit: image 96 (47/47, after skipping 0)
-{"accepted_images":47,"actual_total_Q_O":4219,"completed_images":47,"ledger":"ledger.json","output_dir":"/home/ubuntu/results/packed40-R67108864-depth0","status":"completed","total_base_executions":47}
-	Command being timed: "taskset -c 4 target/release/mnist_survey --selection benchmarks/mnist-test/artifacts/R67108864/selected.json --expected-selection-sha256 aa441b114675cffc0b349322cad59c347018ec8f1ee846982cb4da1552973dd2 --mode protocol --backend ladder --body packed64 --soundness single-shot-40 --depth 0 --images 47 --output-dir /home/ubuntu/results/packed40-R67108864-depth0"
-	User time (seconds): 8051.49
-	System time (seconds): 164.13
+{"accepted_images":47,"actual_total_Q_O":4219,"completed_images":47,"ledger":"ledger.json","output_dir":"/home/ubuntu/results/rewind40-R67108864","status":"completed","total_base_executions":47}
+	Command being timed: "taskset -c 4 target/release/mnist_survey --selection benchmarks/mnist-test/artifacts/R67108864/selected.json --expected-selection-sha256 aa441b114675cffc0b349322cad59c347018ec8f1ee846982cb4da1552973dd2 --mode protocol --backend ladder --body packed64 --soundness single-shot-40 --depth 0 --compilation rewind --images 47 --output-dir /home/ubuntu/results/rewind40-R67108864"
+	User time (seconds): 7739.90
+	System time (seconds): 101.38
 	Percent of CPU this job got: 99%
-	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:16:56
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:10:41
 	Average shared text size (kbytes): 0
 	Average unshared data size (kbytes): 0
 	Average stack size (kbytes): 0
 	Average total size (kbytes): 0
-	Maximum resident set size (kbytes): 388252208
+	Maximum resident set size (kbytes): 388252152
 	Average resident set size (kbytes): 0
-	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 28641661
-	Voluntary context switches: 83
-	Involuntary context switches: 36990
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 30767575
+	Voluntary context switches: 109
+	Involuntary context switches: 28904
 	Swaps: 0
-	File system inputs: 8
-	File system outputs: 24104
+	File system inputs: 136
+	File system outputs: 23848
 	Socket messages sent: 0
 	Socket messages received: 0
 	Signals delivered: 0

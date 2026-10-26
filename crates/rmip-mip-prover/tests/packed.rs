@@ -71,6 +71,7 @@ fn run<F: PackedField, B: LazyBackend<Field = F128>>(
         AuditMode::Sequential => rmip_mip::audit_all_with_answers(&execution, &checker)
             .0
             .accepted(),
+        AuditMode::Rewind => execution.iop_accepted(),
     };
     assert_eq!(execution.oracle_calls, cfg.t);
     (verdict, audited, counting.calls.get(), execution.q_long())
@@ -131,9 +132,21 @@ fn the_lazy_packed_port_rejects_a_wrong_label() {
 fn measured_shape(st: &PackedStatement<'_>) -> rmip_backend_ladder::LadderShape {
     let (_, total_log) = st.tree.layout(6);
     let shape = rmip_backend_ladder::SingleShotTarget { bits: 40 }
-        .ladder_shape(total_log, Some(0), 64)
+        .rewinding_shape(total_log, 64)
         .expect("the measured shape");
     assert_eq!(shape.depth(), 0);
+    assert_eq!(shape.pins, 0);
+    assert_eq!(shape.queries(), 64);
+    shape
+}
+
+fn two_prover_shape(st: &PackedStatement<'_>) -> rmip_backend_ladder::LadderShape {
+    let (_, total_log) = st.tree.layout(6);
+    let shape = rmip_backend_ladder::SingleShotTarget { bits: 40 }
+        .ladder_shape(total_log, Some(0), 64)
+        .expect("the pinned shape");
+    assert_eq!(shape.depth(), 0);
+    assert!(shape.pins >= 1);
     shape
 }
 
@@ -142,10 +155,32 @@ fn run_measured(
     oracle: &rmip_frontend::mnist::SparseTableOracle,
     threshold: usize,
     cheat: &PackedCheat,
+) -> (Result<(), Reject>, usize, usize) {
+    let st = PackedStatement::new(&case.inst, &case.circuit, threshold as u64, true);
+    let shape = measured_shape(&st);
+    let cfg = Config::for_instance(&case.inst, 2f64.powi(-41));
+    let counting = Counting {
+        inner: oracle,
+        calls: Cell::new(0),
+    };
+    let mut main = rmip_backend_ladder::Ladder64::lazy(shape);
+    assert_eq!(main.params(1).audit, AuditMode::Rewind);
+    let mut ch = OsChallenger::new();
+    let (execution, verdict) =
+        execute_recording_packed::<F64, _, _>(&st, &mut main, &counting, &cfg, cheat, &mut ch);
+    assert_eq!(execution.oracle_calls, cfg.t);
+    (verdict, counting.calls.get(), execution.q_long())
+}
+
+fn run_two_prover(
+    case: &rmip_demo::harness::Case,
+    oracle: &rmip_frontend::mnist::SparseTableOracle,
+    threshold: usize,
+    cheat: &PackedCheat,
     checker_cheat: &PackedCheat,
 ) -> (Result<(), Reject>, bool, usize, usize) {
     let st = PackedStatement::new(&case.inst, &case.circuit, threshold as u64, true);
-    let shape = measured_shape(&st);
+    let shape = two_prover_shape(&st);
     let cfg = Config::for_instance(&case.inst, 2f64.powi(-41));
     let (_, _, words) = packed_witness::<F64, _>(&st, oracle, checker_cheat);
     let mut checker_backend = rmip_backend_ladder::Ladder64::lazy(shape);
@@ -168,10 +203,23 @@ fn run_measured(
 }
 
 #[test]
-fn the_measured_configuration_accepts_the_honest_provers() {
+fn the_measured_configuration_accepts_the_honest_prover() {
     let (case, oracle, threshold) = fixture(4096);
     let cfg = Config::for_instance(&case.inst, 2f64.powi(-41));
-    let (verdict, audited, calls, q) = run_measured(
+    let (verdict, calls, q) = run_measured(&case, &oracle, threshold, &PackedCheat::default());
+    assert_eq!(verdict, Ok(()));
+    assert_eq!(calls, case.inst.ell + cfg.t);
+    assert_eq!(
+        q, 1,
+        "depth 0 has one table, read as one bundled occurrence"
+    );
+}
+
+#[test]
+fn the_two_prover_compilation_at_the_same_opening_accepts_the_honest_provers() {
+    let (case, oracle, threshold) = fixture(4096);
+    let cfg = Config::for_instance(&case.inst, 2f64.powi(-41));
+    let (verdict, audited, calls, q) = run_two_prover(
         &case,
         &oracle,
         threshold,
@@ -184,10 +232,7 @@ fn the_measured_configuration_accepts_the_honest_provers() {
         "the sequential audit accepts the honest answering role"
     );
     assert_eq!(calls, case.inst.ell + cfg.t);
-    assert_eq!(
-        q, 1,
-        "depth 0 has one table, so one query to the answering role"
-    );
+    assert_eq!(q, 1);
 }
 
 #[test]
@@ -197,8 +242,7 @@ fn the_measured_configuration_rejects_a_wrong_label_at_the_oracle() {
         public_input_bits: vec![0],
         ..Default::default()
     };
-    let (verdict, _, _, q) =
-        run_measured(&case, &oracle, threshold, &cheat, &PackedCheat::default());
+    let (verdict, _, q) = run_measured(&case, &oracle, threshold, &cheat);
     assert!(
         matches!(verdict, Err(Reject::OracleMismatch { .. })),
         "{verdict:?}"
@@ -214,8 +258,7 @@ fn the_measured_configuration_rejects_a_corrupted_committed_word() {
             corrupt_word: Some((word, 0x5555_5555_5555_5555)),
             ..Default::default()
         };
-        let (verdict, _, _, _) =
-            run_measured(&case, &oracle, threshold, &cheat, &PackedCheat::default());
+        let (verdict, _, _) = run_measured(&case, &oracle, threshold, &cheat);
         assert!(verdict.is_err(), "word {word}: {verdict:?}");
         assert!(
             !matches!(verdict, Err(Reject::OracleMismatch { .. })),
@@ -231,7 +274,7 @@ fn the_measured_configuration_rejects_an_answering_role_that_disagrees() {
         corrupt_word: Some((3, 0xdead_beef_dead_beef)),
         ..Default::default()
     };
-    let (verdict, audited, _, _) = run_measured(
+    let (verdict, audited, _, _) = run_two_prover(
         &case,
         &oracle,
         threshold,

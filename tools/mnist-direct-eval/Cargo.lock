@@ -415,17 +415,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63b8176103e19a2643978565ca18b50549f6101881c443590420e4dc998a3c69"
 
 [[package]]
-name = "rmip-backend-bundled"
-version = "0.1.0"
-dependencies = [
- "rmip-backend-interleaved",
- "rmip-field",
- "rmip-iop",
- "rmip-mip-prover",
- "rmip-opt",
-]
-
-[[package]]
 name = "rmip-backend-interleaved"
 version = "0.1.0"
 dependencies = [
@@ -438,7 +427,6 @@ dependencies = [
 name = "rmip-backend-ladder"
 version = "0.1.0"
 dependencies = [
- "rmip-backend-bundled",
  "rmip-backend-interleaved",
  "rmip-field",
  "rmip-iop",
@@ -468,7 +456,6 @@ dependencies = [
 name = "rmip-demo"
 version = "0.1.0"
 dependencies = [
- "rmip-backend-bundled",
  "rmip-backend-interleaved",
  "rmip-backend-ladder",
  "rmip-backend-recursive",

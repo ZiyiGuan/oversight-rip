@@ -67,7 +67,7 @@ impl<C: RawChallenger + Send> Challenger for FlockChallenger<'_, C> {
 
     fn fork_from_seed(&self, _seed: [Theirs; 2], label: &'static [u8]) -> Self {
         panic!(
-            "the two-prover transcript does not fork (label {:?}): a forked child would expand one seed into many coins",
+            "the protocol's transcript does not fork (label {:?}): a forked child would expand one seed into many coins",
             String::from_utf8_lossy(label)
         )
     }

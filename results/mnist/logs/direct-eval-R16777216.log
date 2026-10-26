@@ -1,50 +1,73 @@
-R=16777216: image 0 (1/49): interpreter best 1280900.8 us, median 1303026.3 us, batch 1; tight best 10559.05 us (0.63 ns per view), in order 3977.76 us
-R=16777216: image 1 (2/49): interpreter best 1358618.6 us, median 1364214.5 us, batch 1; tight best 10665.50 us (0.64 ns per view), in order 4007.65 us
-R=16777216: image 2 (3/49): interpreter best 1262421.3 us, median 1270873.2 us, batch 1; tight best 10584.62 us (0.63 ns per view), in order 3988.31 us
-R=16777216: image 4 (4/49): interpreter best 1255086.0 us, median 1261376.1 us, batch 1; tight best 10510.13 us (0.63 ns per view), in order 4004.45 us
-R=16777216: image 5 (5/49): interpreter best 1249151.8 us, median 1257124.8 us, batch 1; tight best 10526.53 us (0.63 ns per view), in order 4011.90 us
-R=16777216: image 10 (6/49): interpreter best 1265502.8 us, median 1271328.8 us, batch 1; tight best 10668.47 us (0.64 ns per view), in order 3998.21 us
-R=16777216: image 13 (7/49): interpreter best 1286700.5 us, median 1295404.3 us, batch 1; tight best 10656.38 us (0.64 ns per view), in order 4009.28 us
-R=16777216: image 14 (8/49): interpreter best 1356778.0 us, median 1358295.7 us, batch 1; tight best 10552.63 us (0.63 ns per view), in order 3988.05 us
-R=16777216: image 17 (9/49): interpreter best 1361472.0 us, median 1362951.3 us, batch 1; tight best 10520.98 us (0.63 ns per view), in order 3989.72 us
-R=16777216: image 19 (10/49): interpreter best 1246472.1 us, median 1253035.8 us, batch 1; tight best 10642.89 us (0.63 ns per view), in order 4005.46 us
-R=16777216: image 21 (11/49): interpreter best 1246641.5 us, median 1263875.0 us, batch 1; tight best 10536.63 us (0.63 ns per view), in order 4002.53 us
-R=16777216: image 23 (12/49): interpreter best 1268413.8 us, median 1277379.6 us, batch 1; tight best 10661.67 us (0.64 ns per view), in order 4011.11 us
-R=16777216: image 25 (13/49): interpreter best 1286848.4 us, median 1304747.2 us, batch 1; tight best 10672.15 us (0.64 ns per view), in order 4010.74 us
-R=16777216: image 26 (14/49): interpreter best 1264995.0 us, median 1288097.7 us, batch 1; tight best 10656.33 us (0.64 ns per view), in order 3995.45 us
-R=16777216: image 27 (15/49): interpreter best 1267260.4 us, median 1273514.6 us, batch 1; tight best 10664.96 us (0.64 ns per view), in order 3983.33 us
-R=16777216: image 29 (16/49): interpreter best 1292210.9 us, median 1301032.9 us, batch 1; tight best 10480.97 us (0.62 ns per view), in order 3992.63 us
-R=16777216: image 30 (17/49): interpreter best 1296946.2 us, median 1317546.6 us, batch 1; tight best 10524.61 us (0.63 ns per view), in order 3988.98 us
-R=16777216: image 31 (18/49): interpreter best 1249512.1 us, median 1257160.4 us, batch 1; tight best 10506.15 us (0.63 ns per view), in order 3987.99 us
-R=16777216: image 32 (19/49): interpreter best 1250494.5 us, median 1258366.1 us, batch 1; tight best 10578.23 us (0.63 ns per view), in order 3988.14 us
-R=16777216: image 34 (20/49): interpreter best 1248543.1 us, median 1254832.1 us, batch 1; tight best 10459.92 us (0.62 ns per view), in order 3989.97 us
-R=16777216: image 35 (21/49): interpreter best 1248332.8 us, median 1261681.5 us, batch 1; tight best 10434.96 us (0.62 ns per view), in order 3991.24 us
-R=16777216: image 36 (22/49): interpreter best 1252784.7 us, median 1260835.9 us, batch 1; tight best 10520.38 us (0.63 ns per view), in order 4011.74 us
-R=16777216: image 37 (23/49): interpreter best 1249139.5 us, median 1260206.0 us, batch 1; tight best 10686.89 us (0.64 ns per view), in order 3983.69 us
-R=16777216: image 39 (24/49): interpreter best 1249546.2 us, median 1253207.0 us, batch 1; tight best 10573.68 us (0.63 ns per view), in order 4012.64 us
-R=16777216: image 41 (25/49): interpreter best 1255008.4 us, median 1270894.0 us, batch 1; tight best 10551.76 us (0.63 ns per view), in order 3985.53 us
-R=16777216: image 46 (26/49): interpreter best 1256479.6 us, median 1284235.8 us, batch 1; tight best 10498.90 us (0.63 ns per view), in order 4000.48 us
-R=16777216: image 47 (27/49): interpreter best 1246789.6 us, median 1256451.6 us, batch 1; tight best 10643.19 us (0.63 ns per view), in order 3999.04 us
-R=16777216: image 49 (28/49): interpreter best 1256996.7 us, median 1270609.3 us, batch 1; tight best 10639.99 us (0.63 ns per view), in order 3997.52 us
-R=16777216: image 50 (29/49): interpreter best 1250076.1 us, median 1255303.9 us, batch 1; tight best 10558.38 us (0.63 ns per view), in order 3998.41 us
-R=16777216: image 56 (30/49): interpreter best 1247097.8 us, median 1255233.1 us, batch 1; tight best 10673.59 us (0.64 ns per view), in order 3990.66 us
-R=16777216: image 57 (31/49): interpreter best 1358024.6 us, median 1359934.3 us, batch 1; tight best 10472.02 us (0.62 ns per view), in order 3981.37 us
-R=16777216: image 60 (32/49): interpreter best 1359806.4 us, median 1360999.4 us, batch 1; tight best 10541.41 us (0.63 ns per view), in order 3984.88 us
-R=16777216: image 67 (33/49): interpreter best 1357925.8 us, median 1359353.1 us, batch 1; tight best 10577.79 us (0.63 ns per view), in order 4032.26 us
-R=16777216: image 69 (34/49): interpreter best 1265312.3 us, median 1280030.6 us, batch 1; tight best 10444.67 us (0.62 ns per view), in order 4030.24 us
-R=16777216: image 70 (35/49): interpreter best 1263884.6 us, median 1281329.8 us, batch 1; tight best 10643.59 us (0.63 ns per view), in order 4035.72 us
-R=16777216: image 71 (36/49): interpreter best 1246937.3 us, median 1257961.3 us, batch 1; tight best 10383.67 us (0.62 ns per view), in order 3977.01 us
-R=16777216: image 74 (37/49): interpreter best 1250259.3 us, median 1260976.3 us, batch 1; tight best 10590.37 us (0.63 ns per view), in order 3980.77 us
-R=16777216: image 76 (38/49): interpreter best 1265198.5 us, median 1271430.9 us, batch 1; tight best 10667.76 us (0.64 ns per view), in order 4004.97 us
-R=16777216: image 79 (39/49): interpreter best 1262870.5 us, median 1278893.3 us, batch 1; tight best 10628.44 us (0.63 ns per view), in order 4018.61 us
-R=16777216: image 81 (40/49): interpreter best 1252781.2 us, median 1261816.5 us, batch 1; tight best 10568.41 us (0.63 ns per view), in order 3993.34 us
-R=16777216: image 82 (41/49): interpreter best 1255067.5 us, median 1258226.4 us, batch 1; tight best 10656.32 us (0.64 ns per view), in order 3977.43 us
-R=16777216: image 85 (42/49): interpreter best 1262192.6 us, median 1270400.4 us, batch 1; tight best 10673.42 us (0.64 ns per view), in order 4004.97 us
-R=16777216: image 86 (43/49): interpreter best 1248770.3 us, median 1257599.8 us, batch 1; tight best 10737.50 us (0.64 ns per view), in order 3981.19 us
-R=16777216: image 88 (44/49): interpreter best 1358100.4 us, median 1358757.5 us, batch 1; tight best 10523.63 us (0.63 ns per view), in order 4006.13 us
-R=16777216: image 89 (45/49): interpreter best 1256108.4 us, median 1279237.3 us, batch 1; tight best 10721.46 us (0.64 ns per view), in order 4039.58 us
-R=16777216: image 90 (46/49): interpreter best 1247196.7 us, median 1256005.4 us, batch 1; tight best 10609.83 us (0.63 ns per view), in order 4013.48 us
-R=16777216: image 91 (47/49): interpreter best 1250314.3 us, median 1260586.2 us, batch 1; tight best 10408.62 us (0.62 ns per view), in order 3975.21 us
-R=16777216: image 94 (48/49): interpreter best 1278712.4 us, median 1285529.9 us, batch 1; tight best 10553.35 us (0.63 ns per view), in order 4024.36 us
-R=16777216: image 96 (49/49): interpreter best 1316204.8 us, median 1327993.8 us, batch 1; tight best 10628.40 us (0.63 ns per view), in order 4043.93 us
-{"completed_images":49,"output":"/home/ubuntu/results/direct-eval-R16777216.json","status":"completed","summary":{"best_us":{"max":1361471.955,"median":1256996.654,"min":1246472.122},"images":49,"median_us":{"max":1364214.456,"median":1270894.008,"min":1253035.839},"tight_best_us":{"max":10737.503,"median":10577.787,"min":10383.67},"tight_in_order_best_us":{"max":4043.93,"median":3998.209,"min":3975.206}},"views":16777216}
+R=16777216: image 0 (1/49): interpreter best 1241864.3 us, median 1262921.6 us, batch 1; tight best 10082.01 us (0.60 ns per view), in order 3822.22 us
+R=16777216: image 1 (2/49): interpreter best 1310053.2 us, median 1311216.6 us, batch 1; tight best 10144.45 us (0.60 ns per view), in order 3829.55 us
+R=16777216: image 2 (3/49): interpreter best 1200875.4 us, median 1209209.5 us, batch 1; tight best 10160.48 us (0.61 ns per view), in order 3819.63 us
+R=16777216: image 4 (4/49): interpreter best 1211478.8 us, median 1222307.5 us, batch 1; tight best 10195.86 us (0.61 ns per view), in order 3848.83 us
+R=16777216: image 5 (5/49): interpreter best 1226604.6 us, median 1228983.0 us, batch 1; tight best 10245.77 us (0.61 ns per view), in order 3829.30 us
+R=16777216: image 10 (6/49): interpreter best 1212118.0 us, median 1227939.8 us, batch 1; tight best 10041.80 us (0.60 ns per view), in order 3819.69 us
+R=16777216: image 13 (7/49): interpreter best 1212487.7 us, median 1235247.2 us, batch 1; tight best 10026.56 us (0.60 ns per view), in order 3820.87 us
+R=16777216: image 14 (8/49): interpreter best 1229412.5 us, median 1238571.9 us, batch 1; tight best 10112.62 us (0.60 ns per view), in order 3829.90 us
+R=16777216: image 17 (9/49): interpreter best 1205120.8 us, median 1217208.3 us, batch 1; tight best 10004.26 us (0.60 ns per view), in order 3834.95 us
+R=16777216: image 19 (10/49): interpreter best 1248411.8 us, median 1284957.6 us, batch 1; tight best 10162.42 us (0.61 ns per view), in order 3829.90 us
+R=16777216: image 21 (11/49): interpreter best 1248271.4 us, median 1262114.1 us, batch 1; tight best 10071.10 us (0.60 ns per view), in order 3827.56 us
+R=16777216: image 23 (12/49): interpreter best 1309769.9 us, median 1318680.8 us, batch 1; tight best 10163.77 us (0.61 ns per view), in order 3826.32 us
+R=16777216: image 25 (13/49): interpreter best 1215721.9 us, median 1224761.5 us, batch 1; tight best 10284.36 us (0.61 ns per view), in order 3855.81 us
+R=16777216: image 26 (14/49): interpreter best 1228105.7 us, median 1260519.9 us, batch 1; tight best 10106.58 us (0.60 ns per view), in order 3822.91 us
+R=16777216: image 27 (15/49): interpreter best 1245199.4 us, median 1264525.3 us, batch 1; tight best 10148.19 us (0.60 ns per view), in order 3826.40 us
+R=16777216: image 29 (16/49): interpreter best 1314584.5 us, median 1315944.7 us, batch 1; tight best 10137.45 us (0.60 ns per view), in order 3818.38 us
+R=16777216: image 30 (17/49): interpreter best 1207823.4 us, median 1246328.4 us, batch 1; tight best 10015.93 us (0.60 ns per view), in order 3823.27 us
+R=16777216: image 31 (18/49): interpreter best 1216381.5 us, median 1228317.5 us, batch 1; tight best 10271.00 us (0.61 ns per view), in order 3818.11 us
+R=16777216: image 32 (19/49): interpreter best 1310652.9 us, median 1317702.3 us, batch 1; tight best 10206.91 us (0.61 ns per view), in order 3825.26 us
+R=16777216: image 34 (20/49): interpreter best 1226916.2 us, median 1234245.4 us, batch 1; tight best 10159.81 us (0.61 ns per view), in order 3832.85 us
+R=16777216: image 35 (21/49): interpreter best 1210673.5 us, median 1274803.2 us, batch 1; tight best 10093.92 us (0.60 ns per view), in order 3831.93 us
+R=16777216: image 36 (22/49): interpreter best 1215153.8 us, median 1247311.2 us, batch 1; tight best 10020.99 us (0.60 ns per view), in order 3822.83 us
+R=16777216: image 37 (23/49): interpreter best 1214028.5 us, median 1214897.2 us, batch 1; tight best 10038.85 us (0.60 ns per view), in order 3819.46 us
+R=16777216: image 39 (24/49): interpreter best 1265563.3 us, median 1273978.5 us, batch 1; tight best 10066.76 us (0.60 ns per view), in order 3827.89 us
+R=16777216: image 41 (25/49): interpreter best 1233982.1 us, median 1235402.4 us, batch 1; tight best 10151.00 us (0.61 ns per view), in order 3821.81 us
+R=16777216: image 46 (26/49): interpreter best 1196458.5 us, median 1209942.6 us, batch 1; tight best 10089.13 us (0.60 ns per view), in order 3821.03 us
+R=16777216: image 47 (27/49): interpreter best 1206618.9 us, median 1233670.4 us, batch 1; tight best 10049.13 us (0.60 ns per view), in order 3830.81 us
+R=16777216: image 49 (28/49): interpreter best 1212680.3 us, median 1219003.0 us, batch 1; tight best 10153.70 us (0.61 ns per view), in order 3824.67 us
+R=16777216: image 50 (29/49): interpreter best 1228146.9 us, median 1232182.0 us, batch 1; tight best 10242.44 us (0.61 ns per view), in order 3835.34 us
+R=16777216: image 56 (30/49): interpreter best 1265716.3 us, median 1287624.2 us, batch 1; tight best 10131.24 us (0.60 ns per view), in order 3827.63 us
+R=16777216: image 57 (31/49): interpreter best 1214730.7 us, median 1218807.4 us, batch 1; tight best 10193.84 us (0.61 ns per view), in order 3819.04 us
+R=16777216: image 60 (32/49): interpreter best 1298490.8 us, median 1305594.4 us, batch 1; tight best 10096.48 us (0.60 ns per view), in order 3817.61 us
+R=16777216: image 67 (33/49): interpreter best 1214641.5 us, median 1240663.6 us, batch 1; tight best 10159.49 us (0.61 ns per view), in order 3826.74 us
+R=16777216: image 69 (34/49): interpreter best 1205887.9 us, median 1216498.8 us, batch 1; tight best 10132.88 us (0.60 ns per view), in order 3826.91 us
+R=16777216: image 70 (35/49): interpreter best 1226078.1 us, median 1235568.4 us, batch 1; tight best 10054.68 us (0.60 ns per view), in order 3823.30 us
+R=16777216: image 71 (36/49): interpreter best 1313048.5 us, median 1315700.6 us, batch 1; tight best 10088.17 us (0.60 ns per view), in order 3820.51 us
+R=16777216: image 74 (37/49): interpreter best 1199797.6 us, median 1224400.7 us, batch 1; tight best 10222.16 us (0.61 ns per view), in order 3837.41 us
+R=16777216: image 76 (38/49): interpreter best 1213876.3 us, median 1221380.4 us, batch 1; tight best 10220.26 us (0.61 ns per view), in order 3820.19 us
+R=16777216: image 79 (39/49): interpreter best 1237737.7 us, median 1241700.2 us, batch 1; tight best 10189.49 us (0.61 ns per view), in order 3820.66 us
+R=16777216: image 81 (40/49): interpreter best 1220358.1 us, median 1223444.8 us, batch 1; tight best 10006.19 us (0.60 ns per view), in order 3831.02 us
+R=16777216: image 82 (41/49): interpreter best 1208551.9 us, median 1217755.3 us, batch 1; tight best 10150.87 us (0.61 ns per view), in order 3829.11 us
+R=16777216: image 85 (42/49): interpreter best 1249118.1 us, median 1254809.8 us, batch 1; tight best 10146.48 us (0.60 ns per view), in order 3819.96 us
+R=16777216: image 86 (43/49): interpreter best 1203363.0 us, median 1212808.3 us, batch 1; tight best 10136.60 us (0.60 ns per view), in order 3837.05 us
+R=16777216: image 88 (44/49): interpreter best 1236039.0 us, median 1241129.8 us, batch 1; tight best 10227.91 us (0.61 ns per view), in order 3847.79 us
+R=16777216: image 89 (45/49): interpreter best 1318450.9 us, median 1320157.6 us, batch 1; tight best 10013.99 us (0.60 ns per view), in order 3847.34 us
+R=16777216: image 90 (46/49): interpreter best 1229195.0 us, median 1274317.4 us, batch 1; tight best 10273.72 us (0.61 ns per view), in order 3826.18 us
+R=16777216: image 91 (47/49): interpreter best 1312718.4 us, median 1313436.1 us, batch 1; tight best 10112.67 us (0.60 ns per view), in order 3821.49 us
+R=16777216: image 94 (48/49): interpreter best 1215977.9 us, median 1260178.0 us, batch 1; tight best 9947.74 us (0.59 ns per view), in order 3826.85 us
+R=16777216: image 96 (49/49): interpreter best 1226175.2 us, median 1232507.8 us, batch 1; tight best 10123.62 us (0.60 ns per view), in order 3825.00 us
+{"completed_images":49,"output":"/home/ubuntu/results/direct-eval-R16777216.json","status":"completed","summary":{"best_us":{"max":1318450.864,"median":1226175.164,"min":1196458.477},"images":49,"median_us":{"max":1320157.632,"median":1238571.898,"min":1209209.531},"tight_best_us":{"max":10284.358,"median":10136.603,"min":9947.738},"tight_in_order_best_us":{"max":3855.811,"median":3826.321,"min":3817.61}},"views":16777216}
+	Command being timed: "taskset -c 4 tools/mnist-direct-eval/target/release/mnist-direct-eval --selection benchmarks/mnist-test/artifacts/R16777216/selected.json --expected-selection-sha256 432b9ea38c18bb5ef043c405e5c3cf8f40e35dda01cada46c864122945c0baca --images 49 --probes 9 --output /home/ubuntu/results/direct-eval-R16777216.json"
+	User time (seconds): 2961.50
+	System time (seconds): 111.89
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 51:13.44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 101162280
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 103717592
+	Voluntary context switches: 73
+	Involuntary context switches: 12165
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 3096
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

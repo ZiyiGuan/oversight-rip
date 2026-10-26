@@ -122,6 +122,9 @@ impl LadderShape {
     pub fn depth(&self) -> usize {
         self.log_n0().saturating_sub(self.log_n_min)
     }
+    pub fn is_pinless(&self) -> bool {
+        self.pins == 0
+    }
     pub fn delta(&self) -> f64 {
         code::unique_decoding_radius(self.n0(), self.n_enc_at(0))
     }
@@ -130,9 +133,13 @@ impl LadderShape {
     }
 
     pub fn schedule(&self) -> Schedule {
-        assert!(self.pins >= 1, "at least one pinning functional");
-        assert!(self.rate_inv >= 2 && self.rate_inv.is_power_of_two());
         let d = self.depth();
+        assert!(
+            self.pins >= 1 || d == 0,
+            "a ladder of depth {d} needs at least one pinning functional; only the one-table \
+             ladder (depth 0) exists without pins, under the rewinding compilation"
+        );
+        assert!(self.rate_inv >= 2 && self.rate_inv.is_power_of_two());
         let pins = self.pins;
         let mut tables: Vec<Table> = Vec::new();
         tables.push(Table {

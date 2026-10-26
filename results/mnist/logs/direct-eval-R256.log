@@ -1,51 +1,74 @@
-R=256: image 0 (1/50): interpreter best 18.6 us, median 18.7 us, batch 256; tight best 0.20 us (0.76 ns per view), in order 0.07 us
-R=256: image 1 (2/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 2 (3/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 4 (4/50): interpreter best 18.7 us, median 18.8 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 5 (5/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 10 (6/50): interpreter best 18.6 us, median 18.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 13 (7/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 14 (8/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 17 (9/50): interpreter best 19.1 us, median 19.2 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 19 (10/50): interpreter best 18.8 us, median 18.8 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 21 (11/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 23 (12/50): interpreter best 18.7 us, median 18.8 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 25 (13/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 26 (14/50): interpreter best 18.8 us, median 18.9 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 27 (15/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 29 (16/50): interpreter best 19.0 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 30 (17/50): interpreter best 18.9 us, median 18.9 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 31 (18/50): interpreter best 18.8 us, median 18.9 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 32 (19/50): interpreter best 18.8 us, median 19.0 us, batch 256; tight best 0.17 us (0.65 ns per view), in order 0.07 us
-R=256: image 34 (20/50): interpreter best 18.9 us, median 19.0 us, batch 256; tight best 0.17 us (0.65 ns per view), in order 0.07 us
-R=256: image 35 (21/50): interpreter best 19.1 us, median 19.1 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 36 (22/50): interpreter best 19.0 us, median 19.1 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 37 (23/50): interpreter best 19.0 us, median 19.1 us, batch 256; tight best 0.17 us (0.65 ns per view), in order 0.07 us
-R=256: image 39 (24/50): interpreter best 19.0 us, median 19.1 us, batch 256; tight best 0.17 us (0.65 ns per view), in order 0.07 us
-R=256: image 40 (25/50): interpreter best 18.9 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 41 (26/50): interpreter best 19.3 us, median 19.4 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 46 (27/50): interpreter best 19.1 us, median 19.1 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 47 (28/50): interpreter best 19.0 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 49 (29/50): interpreter best 19.5 us, median 19.7 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 50 (30/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 56 (31/50): interpreter best 19.1 us, median 19.2 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 57 (32/50): interpreter best 19.0 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 60 (33/50): interpreter best 18.9 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 67 (34/50): interpreter best 19.2 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 69 (35/50): interpreter best 19.0 us, median 19.0 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 70 (36/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 71 (37/50): interpreter best 19.3 us, median 19.9 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 74 (38/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 76 (39/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 79 (40/50): interpreter best 19.3 us, median 19.4 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 81 (41/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 82 (42/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 85 (43/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.65 ns per view), in order 0.07 us
-R=256: image 86 (44/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 88 (45/50): interpreter best 19.2 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 89 (46/50): interpreter best 19.2 us, median 19.4 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 90 (47/50): interpreter best 19.2 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 91 (48/50): interpreter best 19.4 us, median 19.4 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 94 (49/50): interpreter best 19.0 us, median 19.1 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-R=256: image 96 (50/50): interpreter best 19.1 us, median 19.3 us, batch 256; tight best 0.17 us (0.64 ns per view), in order 0.07 us
-{"completed_images":50,"output":"/home/ubuntu/results/direct-eval-R256.json","status":"completed","summary":{"best_us":{"max":19.543,"median":19.041,"min":18.598},"images":50,"median_us":{"max":19.85,"median":19.107,"min":18.626},"tight_best_us":{"max":0.195,"median":0.165,"min":0.165},"tight_in_order_best_us":{"max":0.067,"median":0.066,"min":0.065}},"views":256}
+R=256: image 0 (1/50): interpreter best 18.1 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 1 (2/50): interpreter best 18.1 us, median 18.1 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 2 (3/50): interpreter best 18.0 us, median 18.0 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 4 (4/50): interpreter best 18.0 us, median 18.0 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 5 (5/50): interpreter best 18.0 us, median 18.1 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 10 (6/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 13 (7/50): interpreter best 18.2 us, median 18.3 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 14 (8/50): interpreter best 18.1 us, median 18.1 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 17 (9/50): interpreter best 18.2 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 19 (10/50): interpreter best 18.2 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 21 (11/50): interpreter best 18.1 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 23 (12/50): interpreter best 18.2 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 25 (13/50): interpreter best 18.3 us, median 18.4 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 26 (14/50): interpreter best 18.2 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 27 (15/50): interpreter best 18.2 us, median 18.2 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 29 (16/50): interpreter best 18.3 us, median 18.4 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 30 (17/50): interpreter best 18.8 us, median 18.9 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 31 (18/50): interpreter best 18.4 us, median 18.4 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 32 (19/50): interpreter best 18.4 us, median 18.4 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 34 (20/50): interpreter best 18.4 us, median 18.5 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 35 (21/50): interpreter best 18.4 us, median 18.4 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 36 (22/50): interpreter best 18.9 us, median 18.9 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 37 (23/50): interpreter best 19.0 us, median 19.0 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 39 (24/50): interpreter best 18.4 us, median 18.4 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 40 (25/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 41 (26/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 46 (27/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 47 (28/50): interpreter best 18.6 us, median 18.7 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 49 (29/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.18 us (0.72 ns per view), in order 0.06 us
+R=256: image 50 (30/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.18 us (0.72 ns per view), in order 0.06 us
+R=256: image 56 (31/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.18 us (0.71 ns per view), in order 0.06 us
+R=256: image 57 (32/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 60 (33/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.19 us (0.74 ns per view), in order 0.06 us
+R=256: image 67 (34/50): interpreter best 18.5 us, median 18.5 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 69 (35/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 70 (36/50): interpreter best 18.5 us, median 18.6 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 71 (37/50): interpreter best 18.6 us, median 18.7 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 74 (38/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 76 (39/50): interpreter best 19.1 us, median 19.1 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 79 (40/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 81 (41/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 82 (42/50): interpreter best 19.3 us, median 19.3 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 85 (43/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 86 (44/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.18 us (0.70 ns per view), in order 0.06 us
+R=256: image 88 (45/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 89 (46/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 90 (47/50): interpreter best 18.6 us, median 18.7 us, batch 256; tight best 0.19 us (0.75 ns per view), in order 0.06 us
+R=256: image 91 (48/50): interpreter best 18.6 us, median 18.6 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 94 (49/50): interpreter best 18.7 us, median 18.7 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+R=256: image 96 (50/50): interpreter best 19.2 us, median 19.3 us, batch 256; tight best 0.16 us (0.62 ns per view), in order 0.06 us
+{"completed_images":50,"output":"/home/ubuntu/results/direct-eval-R256.json","status":"completed","summary":{"best_us":{"max":19.271,"median":18.503,"min":17.981},"images":50,"median_us":{"max":19.28,"median":18.521,"min":17.988},"tight_best_us":{"max":0.193,"median":0.159,"min":0.159},"tight_in_order_best_us":{"max":0.064,"median":0.064,"min":0.063}},"views":256}
+	Command being timed: "taskset -c 4 tools/mnist-direct-eval/target/release/mnist-direct-eval --selection benchmarks/mnist-test/artifacts/R256/selected.json --expected-selection-sha256 492351ab346e34f183eb3ed446fe9718d3888a34a7a17ce757a05ae9df9bffd3 --images 50 --probes 9 --output /home/ubuntu/results/direct-eval-R256.json"
+	User time (seconds): 6.71
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:06.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 44136
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4069
+	Voluntary context switches: 25
+	Involuntary context switches: 57
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 2480
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

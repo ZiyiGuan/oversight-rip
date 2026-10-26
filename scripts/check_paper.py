@@ -5,7 +5,7 @@
 
 Recomputes, from `results/` (or a rerun's directory), every number stated in the text of the two results and
 compares it with the paper's statement; each statement is embedded below as the paper words it (Section 7
-as finalized on 2026-10-22), and must be updated if the text changes. With `--paper`, it also reads Table 1
+as revised on 2026-10-27 for the rewinding compilation), and must be updated if the text changes. With `--paper`, it also reads Table 1
 (`tab:mnist-cost`, or the earlier `tab:mnist-cost-40`), Table 2 (`tab:blake3`) and Figure 1's coordinates (`fig:mnist-plots`) from the paper's
 LaTeX source and compares them, row by row and matched by size, with what `make_mnist_table.py` and
 `make_blake3_table.py` print; nothing of the tables is embedded here, so these comparisons are independent of
@@ -28,10 +28,10 @@ import make_blake3_table as blake3  # noqa: E402
 import make_mnist_table as mnist  # noqa: E402
 
 def claims(m, b, results):
-    """The paper's statements (Section 7 as finalized on 2026-10-22): (where, the statement, the same quantity
+    """The paper's statements (Section 7 as revised on 2026-10-27 for the rewinding compilation): (where, the statement, the same quantity
     computed from the data)."""
     R = sorted(m)
-    big = [r for r in R if r >= 262144]
+    big = [r for r in R if r >= 1 << 20]
 
     def rng(xs, fmt):
         lo, hi = fmt(min(xs)), fmt(max(xs))
@@ -58,26 +58,34 @@ def claims(m, b, results):
     accuracy = json.loads(accuracy_file.read_text())
     return [
         ("7 classifier's top-1 accuracy on random six-pixel views (%)", "59.4", f"{accuracy['mean_top1_accuracy'] * 100:.1f}"),
-        ("7.1 fingerprints per proof string", "6 to 15", rng([p["pins"] for p in params], str)),
-        ("7.1 collision term below", "2^-50", "2^-50" if max(p["eps_col_all_levels"] for p in params) < 2 ** -50 else "not below 2^-50"),
+        ("7.1 compilation: one prover restored to its posting state before each query, no pins", "rewind / 0",
+         f"{'/'.join(sorted({p['compilation'] for p in params}))} / {rng([p['pins'] for p in params], str)}"),
         ("7.1 opened columns", "64", rng([p["opening_columns"] for p in params], str)),
         ("7.1 proximity error below", "2^-42", "2^-42" if max(p["eps_open"] for p in params) < 2 ** -42 else "not below 2^-42"),
         ("7.1 sampling miss (1-eps)^t at most", "2^-41", "2^-41" if max(p["local_miss_bound"] for p in params) <= 2 ** -41 else "above 2^-41"),
         ("7.1 single-execution soundness error at most, every size", "2^-40.53", f"2^-{math.floor(min(m[r]['error_bits'] for r in R) * 100) / 100:.2f}"),
+        # t is derived per image from its certified robustness eps = flips/views: the least t with (1-eps)^t <= 2^-41.
+        ("7.1 sampled gates: the smallest t with (1-eps)^t <= 2^-41, every image", "smallest",
+         "smallest" if all((1 - im["certificate"]["certified_flips"] / im["certificate"]["r"]) ** im["protocol_parameters"]["base_t"] <= 2 ** -41
+                           < (1 - im["certificate"]["certified_flips"] / im["certificate"]["r"]) ** (im["protocol_parameters"]["base_t"] - 1)
+                           for r in R for im in led[r]["images"]) else "not the smallest"),
+        # The 50 images were chosen at 2^8 views among those accepted with certified robustness at least 1/8.
+        ("7.2 images chosen at 2^8 views with certified robustness at least", "1/8",
+         "1/8" if min(im["certificate"]["certified_flips"] / im["certificate"]["r"] for im in led[256]["images"]) >= 1 / 8 else "below 1/8"),
         ("7.2 images: 50; omitted below 2^24 / 2^26", "1 / 3", f"{50 - m[1 << 24]['images']} / {50 - m[1 << 26]['images']}"),
         ("7.2 median robustness at every size, between", "0.30 and 0.32", rng([m[r]["robustness"] for r in R], f2).replace(" to ", " and ")),
         ("7.2 median verifier oracle queries, between", "74 and 80", rng([m[r]["queries"] for r in R], lambda x: f"{x:.0f}").replace(" to ", " and ")),
         ("7.2 fewer oracle queries than the circuit at 2^26", "840,000", f"{round((1 << 26) / m[1 << 26]['queries'], -4):,.0f}"),
-        ("7.2 verifier online time (ms)", "0.46 to 3.2", f"{v[0]:.2f} to {v[-1]:.1f}"),
-        ("7.2 direct evaluation", "0.07 us to 17 ms", f"{loop[0] * 1e3:.2f} us to {loop[-1]:.0f} ms"),
-        ("7.2 direct evaluation costs about (ns per view)", "0.24", f"{statistics.median(m[r]['loop_us'] * 1e3 / r for r in R):.2f}"),
+        ("7.2 verifier online time (ms)", "0.45 to 1.9", f"{v[0]:.2f} to {v[-1]:.1f}"),
+        ("7.2 direct evaluation", "0.06 us to 16 ms", f"{loop[0] * 1e3:.2f} us to {loop[-1]:.0f} ms"),
+        ("7.2 direct evaluation costs about (ns per view)", "0.23", f"{statistics.median(m[r]['loop_us'] * 1e3 / r for r in R):.2f}"),
         ("7.2 verifier and direct evaluation cross", "between 2^22 and 2^24", crossing),
-        ("7.2 verifier over direct evaluation at 2^26", "0.20", f"{vs_loop[1 << 26]:.2f}"),
-        ("7.2 verifier growth per fourfold step", "1.0 to 1.6", rng(growth, lambda x: f"{x:.1f}")),
-        ("7.2 fall of verifier/direct per step", "2.6 to 3.8", rng(fall, lambda x: f"{x:.1f}")),
-        ("7.2 prover over direct evaluation from 2^18, about", "90 to 110", rng([prover[r] for r in big], lambda x: f"{round(x, -1):.0f}")),
-        ("7.2 prover at 2^26 (s)", "1.5", f"{m[1 << 26]['prover_ms'] / 1000:.1f}"),
-        ("7.4 prover over direct evaluation at the largest sizes, about", "90", f"{round(prover[1 << 26], -1):.0f}"),
+        ("7.2 verifier over direct evaluation at 2^26", "0.12", f"{vs_loop[1 << 26]:.2f}"),
+        ("7.2 verifier growth per fourfold step", "1.1 to 1.3", rng(growth, lambda x: f"{x:.1f}")),
+        ("7.2 fall of verifier/direct per step", "3.0 to 3.7", rng(fall, lambda x: f"{x:.1f}")),
+        ("7.2 prover over direct evaluation from 2^20, about", "60", rng([prover[r] for r in big], lambda x: f"{round(x, -1):.0f}")),
+        ("7.2 prover at 2^26 (s)", "0.9", f"{m[1 << 26]['prover_ms'] / 1000:.1f}"),
+        ("7.4 prover over direct evaluation at the largest sizes, about", "60", f"{round(prover[1 << 26], -1):.0f}"),
         ("7.3 error of our compilation", "2^-42.4 to 2^-42.9",
          "2^-" + rng([o[k]["native_error_bits"] for k in B], lambda x: f"{x:.1f}").replace(" to ", " to 2^-")),
         ("7.3 our prover faster than Flock's SNARG prover, every size (x)", "1.8 to 2.1", rng([f[k]["prover_ms"] / o[k]["prover_ms"] for k in B], lambda x: f"{x:.1f}")),

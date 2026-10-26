@@ -1074,7 +1074,11 @@ impl<F: NttField> CommitmentBackend for LadderOf<F> {
             alphabet,
             ordinary_bytes: self.ordinary_bytes,
             r_open: self.open_rounds(),
-            audit: AuditMode::Sequential,
+            audit: if sh.is_pinless() {
+                AuditMode::Rewind
+            } else {
+                AuditMode::Sequential
+            },
         }
     }
 }
@@ -1117,6 +1121,16 @@ impl SingleShotTarget {
                 None => LadderShape::for_trace(nu, lambda),
             };
             shape.pins = pins_for_budget(shape, kappa, self.collision_budget());
+            (opening_error(shape, kappa) <= target).then_some(shape)
+        })
+    }
+
+    pub fn rewinding_shape(self, nu: usize, kappa: usize) -> Option<LadderShape> {
+        let target = self.power_of_two_below(0);
+        (0..=21u32).find_map(|extra| {
+            let lambda = self.lambda_bits() + f64::from(extra);
+            let mut shape = LadderShape::for_trace_at_depth(nu, lambda, 0);
+            shape.pins = 0;
             (opening_error(shape, kappa) <= target).then_some(shape)
         })
     }
@@ -1179,7 +1193,9 @@ pub fn opening_error(shape: LadderShape, kappa: usize) -> f64 {
 pub fn eps_col_log2_at(shape: LadderShape, level: usize, kappa: usize) -> f64 {
     let q = shape.queries();
     assert!(q >= 1);
-    assert!(shape.pins >= 1, "at least one pinning functional");
+    if shape.is_pinless() {
+        return f64::NEG_INFINITY;
+    }
     let n_enc = shape.n_enc_at(0);
     assert!(
         n_enc.is_power_of_two(),
@@ -1192,6 +1208,9 @@ pub fn eps_col_log2_at(shape: LadderShape, level: usize, kappa: usize) -> f64 {
 }
 
 pub fn collision_total_log2(shape: LadderShape, kappa: usize) -> f64 {
+    if shape.is_pinless() {
+        return f64::NEG_INFINITY;
+    }
     let sched = shape.schedule();
     let logs: Vec<f64> = sched
         .tables
@@ -1209,6 +1228,9 @@ pub fn collision_total_log2(shape: LadderShape, kappa: usize) -> f64 {
 }
 
 pub fn collision_total(shape: LadderShape, kappa: usize) -> f64 {
+    if shape.is_pinless() {
+        return 0.0;
+    }
     power_of_two_upward(collision_total_log2(shape, kappa))
 }
 
@@ -1228,6 +1250,9 @@ pub fn pins_for_budget(shape: LadderShape, kappa: usize, budget: f64) -> usize {
 }
 
 pub fn eps_col_at(shape: LadderShape, level: usize, kappa: usize) -> f64 {
+    if shape.is_pinless() {
+        return 0.0;
+    }
     power_of_two_upward(eps_col_log2_at(shape, level, kappa))
 }
 
@@ -1514,6 +1539,48 @@ mod collision_tests {
         assert!(error < 2f64.powi(-20), "opening error {error:e}");
         let params = crate::Ladder64::lazy(shape).params(1);
         assert_eq!(params.eps_open, error, "the backend reports opening_error");
+    }
+
+    #[test]
+    fn the_rewinding_shape_at_40_bits_takes_64_columns_and_no_pins() {
+        let target = SingleShotTarget { bits: 40 };
+        for nu in [16usize, 20, 24, 26] {
+            let shape = target
+                .rewinding_shape(nu, 64)
+                .expect("the 40-bit target is met at depth 0 at 64 bits");
+            let pinned = target
+                .ladder_shape(nu, Some(0), 64)
+                .expect("the pinned shape exists too");
+            assert_eq!(shape.depth(), 0, "nu={nu}");
+            assert_eq!(shape.pins, 0, "nu={nu}");
+            assert_eq!(shape.queries(), 64, "nu={nu}");
+            assert_eq!(
+                shape.queries(),
+                pinned.queries(),
+                "nu={nu}: the columns do not depend on the pins"
+            );
+            assert_eq!(shape.log_m0, pinned.log_m0, "nu={nu}");
+            let error = opening_error(shape, 64);
+            assert!(
+                error <= 2f64.powi(-40),
+                "nu={nu}: opening error 2^{:.2}",
+                error.log2()
+            );
+            assert!(
+                error < opening_error(pinned, 64),
+                "nu={nu}: without pins the error can only fall"
+            );
+            assert_eq!(eps_col_at(shape, 0, 64), 0.0);
+            assert_eq!(collision_total(shape, 64), 0.0);
+            assert_eq!(
+                crate::Ladder64::lazy(shape).params(1).audit,
+                AuditMode::Rewind
+            );
+            assert_eq!(
+                crate::Ladder64::lazy(pinned).params(1).audit,
+                AuditMode::Sequential
+            );
+        }
     }
 
     #[test]

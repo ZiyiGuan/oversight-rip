@@ -66,6 +66,71 @@ fn the_depth_two_ladder_conforms() {
 }
 
 #[test]
+fn a_pinless_depth_zero_ladder_conforms_and_declares_rewinding() {
+    let shape = LadderShape {
+        nu: 6,
+        log_m0: 3,
+        rate_inv: 4,
+        lambda_bits: 1.0,
+        pins: 0,
+        log_n_min: 3,
+    };
+    conforms(shape);
+    let z = table(shape.nu);
+    let c = one_claim(&z, shape.nu);
+    let mut b = Ladder::new(shape);
+    let mut ch = SeededChallenger::new(3);
+    b.commit(&z, &mut ch);
+    b.open(&c, &mut ch);
+    let p = b.params(1);
+    assert_eq!(p.audit, AuditMode::Rewind);
+    assert_eq!(p.q_long, 1);
+    assert_eq!(rmip_backend_ladder::eps_col_at(shape, 0, 128), 0.0);
+    assert_eq!(rmip_backend_ladder::collision_total(shape, 128), 0.0);
+    let s = b.schedule();
+    let q = s.queries;
+    let escape = 2.0 * (1.0 - shape.delta()).powi(q as i32);
+    assert!(p.eps_open >= escape && p.eps_open < escape * (1.0 + 1e-6) + 1e-9);
+    let mut coins = 0;
+    let mut messages = 0;
+    let mut posts = 0;
+    for e in ch.transcript().entries() {
+        match e {
+            Entry::Coin(_) => coins += 1,
+            Entry::Ordinary(_) => messages += 1,
+            Entry::OraclePost(_) => posts += 1,
+        }
+    }
+    assert_eq!(posts, 1, "one table");
+    assert_eq!(
+        coins,
+        shape.m0() + 1,
+        "the proximity coins and the batching coin, no pin coins"
+    );
+    assert_eq!(
+        messages, 3,
+        "the echoed point, the proximity reply, the opening reply"
+    );
+    for st in commit_steps(s).into_iter().chain(open_steps(s)) {
+        if let Step::PinCoins(_) | Step::ClearPin(_) = st {
+            assert_eq!(
+                events_of(s, st),
+                (0, 0, 0),
+                "a pin step of a pin-free ladder is empty"
+            );
+        }
+    }
+}
+
+#[test]
+#[should_panic(expected = "needs at least one pinning functional")]
+fn a_pinless_shape_below_depth_zero_is_refused() {
+    let mut shape = toy_depth1();
+    shape.pins = 0;
+    let _ = shape.schedule();
+}
+
+#[test]
 fn a_depth_zero_ladder_is_the_bundled_backend_and_conforms() {
     conforms(LadderShape {
         nu: 6,
